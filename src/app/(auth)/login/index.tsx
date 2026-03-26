@@ -9,6 +9,7 @@ import PageMeta from '@/components/PageMeta';
 import { appName, currentYear } from '@/helpers/constants';
 import { Link } from 'react-router';
 import { TbCircleFilled } from "react-icons/tb";
+import { jwtDecode } from "jwt-decode";
 
 const Index = () => {
    const navigate = useNavigate();
@@ -23,48 +24,65 @@ const Index = () => {
   ----------------------------- */
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
 
-    e.preventDefault()
+  setLoading(true);
+  setError("");
 
-    setLoading(true)
-    setError("")
+  try {
+    const data = await login({email,password});
 
-    try {
-       const data = await login({
-        email,
-        password
-      })
-      
-      console.log(data);
-    // Si NestJS renvoie accessToken et refreshToken
     if (data.accessToken && data.refreshToken) {
+      // Stockage tokens
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
-      // localStorage.setItem("role", data.role);
 
-      navigate("/admin/dashboard");
+      // ✅ DECODER LE TOKEN (TRÈS IMPORTANT)
+      const decoded: any = jwtDecode(data.accessToken);
+
+      const user = {
+        id: decoded.sub,
+        email: decoded.email,
+        roles: decoded.roles,
+      };
+
+      // ✅ Stocker user
+      localStorage.setItem("user", JSON.stringify(user));
+
+      console.log("USER:", user);
+
+      // 🔥 Redirection selon role 
+      if (user.roles.includes("SUPER_ADMIN")) {
+        navigate("/admin/dashboard");
+      } else if (user.roles.includes("SCHOOL_ADMIN")) {
+        navigate("/school/dashboard");
+      } else if (user.roles.includes("TEACHER")) {
+        navigate("/teacher/dashboard");
+      } else if (user.roles.includes("STUDENT")) {
+        navigate("/student/dashboard");
+      }
+      else{
+        navigate("/dashboard");
+      }
+
     } else {
-      // Si backend renvoie une erreur au lieu des tokens
-      setError(JSON.stringify(data));
+      setError("Tokens non reçus");
     }
 
-    }catch (err: any) {
-  if (err.response && err.response.data) {
-    // err.response.data contient le vrai message de NestJS
-    const msg = Array.isArray(err.response.data.message)
-      ? err.response.data.message.join(", ")
-      : err.response.data.message;
-    setError(msg); // <-- le vrai message NestJS
-  } else {
-    setError(err.message || "Une erreur inconnue est survenue");
-  }
-} finally {
+  } catch (err: any) {
+    if (err.response && err.response.data) {
+      const msg = Array.isArray(err.response.data.message)
+        ? err.response.data.message.join(", ")
+        : err.response.data.message;
 
-      setLoading(false)
-
+      setError(msg);
+    } else {
+      setError(err.message || "Une erreur inconnue est survenue");
     }
-
+  } finally {
+    setLoading(false);
   }
+}
   return (
     <>
       <PageMeta title="Login" />
@@ -75,32 +93,9 @@ const Index = () => {
 
         <div className="mx-2 m-2 w-170 py-6 px-10 bg-card flex justify-center rounded-md text-center relative z-10">
           <div className="flex flex-col h-full w-full">
-            <div className="flex justify-end">
-              <div className="hs-dropdown [--placement:bottom-right] relative inline-flex">
-                <button
-                  type="button"
-                  className="hs-dropdown-toggle py-2 px-4 bg-transparent border border-default-200 text-default-600 hover:border-primary rounded-md hover:text-primary font-medium text-sm gap-2 flex items-center"
-                >
-                  <img src={UsFlag} alt="US Flag" className="size-5 rounded-full" />
-                  English
-                </button>
-
-                <div className="hs-dropdown-menu">
-                  <a className="flex items-center gap-x-3.5 py-1.5 font-medium px-3 text-default-600 hover:bg-default-150 rounded">
-                    <img src={UsFlag} alt="US Flag" className="size-4 rounded-full" />
-                    English
-                  </a>
-                  <a className="flex items-center gap-x-3.5 py-1.5 font-medium px-3 text-default-600 hover:bg-default-150 rounded">
-                    <img src={SpainFlag} alt="Spain" className="size-4 rounded-full" />
-                    Spanish
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="my-2">
+            <div className="my-1">
               <div className="mt-4">
-                <div className="mt-10 w-100 mx-auto">
+                <div className="mt-5 w-100 mx-auto">
                   <div
                     id="tabsForEmail"
                     role="tabpanel"
@@ -116,12 +111,12 @@ const Index = () => {
                           </div>
                         )}
 
-                      <div className="mb-4 ">
+                      <div className="mb-4">
                         <label
                           htmlFor="Username"
                           className="block  font-medium text-default-900 text-sm mb-2"
                         >
-                          Username/ Email ID
+                          Email ID
                         </label>
                         <input
                           type="text"
@@ -163,7 +158,7 @@ const Index = () => {
                           Remember Me
                         </label>
                         
-                        <span className="flex justify-end text-base text-default-500">
+                        {/* <span className="flex justify-end text-base text-default-500">
                           Don't have an account ?
                           <Link
                             to="/modern-register"
@@ -172,13 +167,13 @@ const Index = () => {
                             {' '}
                             SignUp
                           </Link>
-                        </span>
+                        </span> */}
                       </div>
 
                       <div className="mt-5 text-center">
                         <button type="submit" 
                       disabled={loading} className="btn bg-primary text-white w-full">
-                          {loading ? 'Signing In...' : 'Sign In'}
+                          {loading ? 'Loading...' : 'Sign In'}
                         </button>
                       </div>
 

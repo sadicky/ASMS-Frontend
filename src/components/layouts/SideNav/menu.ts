@@ -1,13 +1,20 @@
 import type { IconType } from 'react-icons/lib';
 import {
-  LuCalendar1,
-  LuCircuitBoard,
-  LuFingerprint,
-  LuMessagesSquare,
   LuMonitorDot,
   LuShoppingBag,
   LuSquareUserRound,
+  LuAlbum,
+  LuSchool,
+  LuScrollText,
+  LuShare2, 
+  LuRotate3D,
+  LuNewspaper
 } from 'react-icons/lu';
+import { GiTeacher } from "react-icons/gi";
+import { PiStudentFill } from "react-icons/pi";
+import { FaGlobeAfrica } from "react-icons/fa";
+import { SiGoogleclassroom } from "react-icons/si";
+import { ROLES } from "@/helpers/constants";
 
 export type MenuItemType = {
   key: string;
@@ -20,6 +27,7 @@ export type MenuItemType = {
   parentKey?: string;
   target?: string;
   isDisabled?: boolean;
+  roles?: string[]; 
 };
 
 export const menuItemsData: MenuItemType[] = [
@@ -32,98 +40,122 @@ export const menuItemsData: MenuItemType[] = [
     key: 'Dashboards',
     label: 'Dashboards',
     icon: LuMonitorDot,
-    children: [
-      { key: 'Analytics', label: 'Analytics', href: '/analytics' },
-      { key: 'Ecommerce', label: 'Ecommerce', href: '/index' },
-      { key: 'Email', label: 'Email', href: '/email' },
-      { key: 'HR', label: 'HR', href: '/hr' },
-    ],
+    href: '/admin/dashboard',
+    roles: [ROLES.SUPER_ADMIN],
   },
+
+  // {
+  //   key: 'SchoolDashboard',
+  //   label: 'Dashboardschool',
+  //   icon: LuMonitorDot,
+  //   href: '/school/dashboard',
+  //   roles: [ROLES.SCHOOL],
+  // },
+
+  // {
+  //   key: 'TeacherDashboard',
+  //   label: 'Dashboard',
+  //   icon: LuMonitorDot,
+  //   href: '/teacher/dashboard',
+  //   roles: [ROLES.TEACHER],
+  // },
+
+  // {
+  //   key: 'StudentDashboard',
+  //   label: 'Dashboard',
+  //   icon: LuMonitorDot,
+  //   href: '/student/dashboard',
+  //   roles: [ROLES.STUDENT],
+  // },
   {
-    key: 'Apps',
-    label: 'Apps',
+    key: 'Pages',
+    label: 'Pages',
     isTitle: true,
+    roles: [ROLES.SUPER_ADMIN],
   },
   {
-    key: 'Chat',
-    label: 'Chat',
-    icon: LuMessagesSquare,
+    key: 'Regions',
+    label: 'Regions',
+    icon: FaGlobeAfrica,
+    href: '/admin/regions',
+    roles: [ROLES.SUPER_ADMIN],
+  },
+  {
+    key: 'Directorates',
+    label: 'Directorates',
+    icon: LuNewspaper  ,
+    href: '/admin/directorates',
+  },
+  {
+    key: 'Districts',
+    label: 'Districts',
+    icon: LuRotate3D ,
+    href: '/admin/districts',
+  },
+  {
+    key: 'Clusters',
+    label: 'Clusters',
+    icon: LuShare2,
+    href: '/admin/cluster',
+  },
+  {
+    key: 'Years',
+    label: 'Years',
+    icon: LuAlbum,
     href: '/chat',
   },
   {
-    key: 'Calendar',
-    label: 'Calendar',
-    icon: LuCalendar1,
-    href: '/calendar',
-  },
-  {
-    key: 'Ecommerce',
-    label: 'Ecommerce',
-    icon: LuShoppingBag,
+    key: 'Schools',
+    label: 'Schools',
+    icon: LuSchool ,
     children: [
-      { key: 'Products', label: 'Products', href: '/product-list' },
-      { key: 'Products Grid', label: 'Products Grid', href: '/product-grid' },
-      { key: 'Product Details', label: 'Product Details', href: '/product-overview' },
-      { key: 'Shopping Cart', label: 'Shopping Cart', href: '/cart' },
-      { key: 'Checkout', label: 'Checkout', href: '/checkout' },
-      { key: 'Add Products', label: 'Add Products', href: '/product-create' },
-      { key: 'Orders', label: 'Orders', href: '/orders' },
-      { key: 'Order Details', label: 'Order Details', href: '/order-overview' },
-      { key: 'Sellers', label: 'Sellers', href: '/sellers' },
+      { key: 'AddSchool', label: 'Add School', href: '/add-school' },
+      { key: 'Schools List', label: 'Schools List', href: '/schools-list' },
     ],
   },
   {
-    key: 'HR Management',
-    label: 'HR Management',
-    icon: LuCircuitBoard,
+    key: 'Licenses',
+    label: 'Licenses',
+    icon: LuScrollText  ,
     children: [
-      { key: 'Employee List', label: 'Employee List', href: '/employee' },
-      { key: 'Holidays', label: 'Holidays', href: '/holidays' },
-      {
-        key: 'Leave Manage',
-        label: 'Leave Manage',
-        href: '#',
-        children: [
-          { key: 'By Employee', label: 'By Employee', href: '/leave-employee' },
-          {
-            key: 'Add Leave(Employee)',
-            label: 'Add Leave(Employee)',
-            href: '/create-leave-employee',
-          },
-          { key: 'By HR', label: 'By HR', href: '/leave' },
-          { key: 'Add Leave(HR)', label: 'Add Leave(HR)', href: '/create-leave' },
-        ],
-      },
-      {
-        key: 'Attendance',
-        label: 'Attendance',
-        href: '#',
-        children: [
-          { key: 'Attendance(HR)', label: 'Attendance(HR)', href: '/attendance' },
-          { key: 'Main Attendance', label: 'Main Attendance', href: '/attendance-main' },
-        ],
-      },
-      { key: 'Department', label: 'Department', href: '/department' },
-      {
-        key: 'Sales',
-        label: 'Sales',
-        href: '#',
-        children: [
-          { key: 'Estimates', label: 'Estimates', href: '/sales-estimates' },
-          { key: 'Payments', label: 'Payments', href: '/sales-payments' },
-          { key: 'Expenses', label: 'Expenses', href: '/sales-expenses' },
-        ],
-      },
-      {
-        key: 'Payroll',
-        label: 'Payroll',
-        href: '#',
-        children: [
-          { key: 'Employee Salary', label: 'Employee Salary', href: '/payroll-employee-salary' },
-          { key: 'Payslip', label: 'Payslip', href: '/payroll-payslip' },
-          { key: 'Create Payslip', label: 'Create Payslip', href: '/create-payslip' },
-        ],
-      },
+      { key: 'AddLicense', label: 'Add License', href: '/add-license' },
+      { key: 'Licenses List', label: 'Licenses List', href: '/licenses-list' },
+    ],
+  },
+  {
+    key: 'Grades',
+    label: 'Grades',
+    icon: LuShoppingBag,
+    children: [
+      { key: 'AddGrade', label: 'Add Grade', href: '/add-grade' },
+      { key: 'Grades List', label: 'Grades List', href: '/grades-list' },
+    ],
+  },
+  {
+    key: 'Classes',
+    label: 'Classes',
+    icon: SiGoogleclassroom,
+    children: [
+      { key: 'AddClass', label: 'Add Class', href: '/add-class' },
+      { key: 'Classes List', label: 'Classes List', href: '/classes-list' },
+    ],
+  },
+  {
+    key: 'Students',
+    label: 'Students',
+    icon: PiStudentFill,
+    children: [
+      { key: 'AddStudent', label: 'Add Student', href: '/add-student' },
+      { key: 'Students List', label: 'Students List', href: '/students-list' },
+    ],
+  },
+  {
+    key: 'Staff',
+    label: 'Staff',
+    icon: GiTeacher,
+    children: [
+      { key: 'AddStaff', label: 'Add Staff', href: '/add-staff' },
+      { key: 'Staff List', label: 'Staff List', href: '/staff-list' },
     ],
   },
   {
@@ -134,24 +166,5 @@ export const menuItemsData: MenuItemType[] = [
       { key: 'List View', label: 'List View', href: '/users-list' },
       { key: 'Grid View', label: 'Grid View', href: '/users-grid' },
     ],
-  },
-  {
-    key: 'Extra',
-    label: 'Extra',
-    isTitle: true,
-  },
-  {
-    key: 'Modern Auth',
-    label: 'Modern Auth',
-    icon: LuFingerprint,
-    children: [
-      { key: 'Login', label: 'Login', href: '/Auth' },
-      { key: 'Register', label: 'Register', href: '/modern-register' },
-      { key: 'Verify Email', label: 'Verify Email', href: '/modern-verify-email' },
-      { key: 'Two Steps', label: 'Two Steps', href: '/modern-two-steps' },
-      { key: 'Logout', label: 'Logout', href: '/modern-logout' },
-      { key: 'Reset Password', label: 'Reset Password', href: '/modern-reset-password' },
-      { key: 'Create Password', label: 'Create Password', href: '/modern-create-password' },
-    ],
-  },
+  }
 ];

@@ -1,16 +1,9 @@
-// import axios from "axios";
+import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 
-// const api = axios.create({
-//   baseURL: "http://localhost:3000/api",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-// });
-
-// export default api;
-
-
-import axios from "axios";
+// 🔥 Étendre le type pour éviter l'erreur _retry
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
 
 const api = axios.create({
   baseURL: "http://localhost:3000/api",
@@ -21,13 +14,11 @@ const api = axios.create({
 
 /* --------------------------
  REQUEST INTERCEPTOR
- attach access token
 --------------------------- */
-
-api.interceptors.request.use((config) => {
+api.interceptors.request.use((config: CustomAxiosRequestConfig) => {
   const token = localStorage.getItem("accessToken");
 
-  if (token) {
+  if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
@@ -36,43 +27,44 @@ api.interceptors.request.use((config) => {
 
 /* --------------------------
  RESPONSE INTERCEPTOR
- refresh token automatically
 --------------------------- */
-
 api.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+  async (error: AxiosError) => {
+    const originalRequest = error.config as CustomAxiosRequestConfig;
 
     if (
       error.response?.status === 401 &&
-      !originalRequest._retry
+      !originalRequest?._retry
     ) {
       originalRequest._retry = true;
 
       try {
         const refreshToken = localStorage.getItem("refreshToken");
 
-        const response = await axios.post(
+        const res = await axios.post(
           "http://localhost:3000/api/auth/refresh",
           { refreshToken }
         );
 
-        const { accessToken } = response.data;
+        const { accessToken } = res.data;
 
         localStorage.setItem("accessToken", accessToken);
 
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        // 🔥 Rejouer la requête
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        }
 
         return api(originalRequest);
 
       } catch (err) {
-
+        // 🔥 Logout automatique
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
+        localStorage.removeItem("user");
 
         window.location.href = "/auth";
-
       }
     }
 
@@ -81,39 +73,3 @@ api.interceptors.response.use(
 );
 
 export default api;
-
-
-// import axios from "axios";
-
-// const api = axios.create({
-//   baseURL: "http://localhost:3000/api",
-//   withCredentials: true
-// });
-
-// // ajouter accessToken automatiquement
-// api.interceptors.request.use((config) => {
-//   const token = localStorage.getItem("accessToken");
-
-//   if (token) {
-//     config.headers.Authorization = `Bearer ${token}`;
-//   }
-
-//   return config;
-// });
-
-// // gérer erreurs NestJS
-// api.interceptors.response.use(
-//   (response) => response,
-//   async (error) => {
-
-//     if (error.response?.status === 401) {
-//       localStorage.removeItem("accessToken");
-//       localStorage.removeItem("refreshToken");
-//       window.location.href = "/login";
-//     }
-
-//     return Promise.reject(error.response?.data);
-//   }
-// );
-
-// export default api;

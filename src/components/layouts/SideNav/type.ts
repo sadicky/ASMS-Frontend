@@ -8,4 +8,5 @@ export type MenuType = {
   icon?: ComponentType<{ className?: string }>;
   isTitle?: boolean;
   children?: MenuType[];
+  roles?: string[]; 
 };

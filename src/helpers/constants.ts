@@ -18,10 +18,10 @@ export const appName = 'ASMS Gambia';
 
 export const DEFAULT_PAGE_TITLE = 'ASMS Gambia';
 export const authorWebsite: string = 'https://spaceline/';
-export const appAuthor: string = 'SADICKY Dave';
+export const appAuthor: string = 'Phoenix Solutions Dev';
 
 // Replace the URL's value in env with your backend's URL or if you're using nextjs's API, add the server's origin URL
-export const API_BASE_PATH = 'localhost:3000/api';
+export const API_BASE_PATH = 'localhost:3000/api/';
 
 export const colorVariants = [
   'primary',
@@ -37,3 +37,11 @@ export const colorVariants = [
   'light',
   'link',
 ];
+
+export const ROLES = {
+  SUPER_ADMIN: "SUPER_ADMIN",
+  NGO: "ADMIN",
+  SCHOOL: "SCHOOL_ADMIN",
+  TEACHER: "TEACHER",
+  STUDENT: "STUDENT"
+} as const;

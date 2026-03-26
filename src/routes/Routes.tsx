@@ -1,20 +1,18 @@
+import { ROLES } from '@/helpers/constants';
 import { lazy } from 'react';
 
-// admin Ecommerce
+// admin pages
 
-const Cart = lazy(() => import('@/app/(admin)/(app)/(ecommerce)/cart'));
-const Checkout = lazy(() => import('@/app/(admin)/(app)/(ecommerce)/checkout'));
-const OrderOverview = lazy(() => import('@/app/(admin)/(app)/(ecommerce)/order-overview'));
-const Orders = lazy(() => import('@/app/(admin)/(app)/(ecommerce)/orders'));
-const ProductCreate = lazy(() => import('@/app/(admin)/(app)/(ecommerce)/product-create'));
-const ProductGrid = lazy(() => import('@/app/(admin)/(app)/(ecommerce)/product-grid'));
-const ProductList = lazy(() => import('@/app/(admin)/(app)/(ecommerce)/product-list'));
-const ProductOverview = lazy(() => import('@/app/(admin)/(app)/(ecommerce)/product-overview'));
-const Sellers = lazy(() => import('@/app/(admin)/(app)/(ecommerce)/sellers'));
+const Regions = lazy(() => import('@/app/(admin)/(app)/(pages)/regions'));
+const Directorate = lazy(() => import('@/app/(admin)/(app)/(pages)/directorates'));
+const District = lazy(() => import('@/app/(admin)/(app)/(pages)/district'));
+const Cluster = lazy(() => import('@/app/(admin)/(app)/(pages)/cluster'));
+const Years = lazy(() => import('@/app/(admin)/(app)/(pages)/product-create'));
+const Licences = lazy(() => import('@/app/(admin)/(app)/(pages)/product-grid'));
 
-// admin Hr
+// add page
 
-const Attendances = lazy(() => import('@/app/(admin)/(app)/(hr)/attendance'));
+const AddRegion = lazy(() => import('@/app/(admin)/(app)/(pages)/regions/add-new'));
 const AttemdanceMain = lazy(() => import('@/app/(admin)/(app)/(hr)/attendance-main'));
 const CreateLeave = lazy(() => import('@/app/(admin)/(app)/(hr)/create-leave'));
 const CreateLeaveEmployee = lazy(() => import('@/app/(admin)/(app)/(hr)/create-leave-employee'));
@@ -27,10 +25,6 @@ const LeaveEmployee = lazy(() => import('@/app/(admin)/(app)/(hr)/leave-employee
 const PayrollEmplyoeeSalary = lazy(
   () => import('@/app/(admin)/(app)/(hr)/payroll-employee-salary')
 );
-const PayRollSlip = lazy(() => import('@/app/(admin)/(app)/(hr)/payroll-payslip'));
-const SalesEstimate = lazy(() => import('@/app/(admin)/(app)/(hr)/sales-estimates'));
-const SalesExpense = lazy(() => import('@/app/(admin)/(app)/(hr)/sales-expenses'));
-const SalePayment = lazy(() => import('@/app/(admin)/(app)/(hr)/sales-payments'));
 
 // admin invoice
 
@@ -49,10 +43,10 @@ const MailBox = lazy(() => import('@/app/(admin)/(app)/mailbox'));
 const Notes = lazy(() => import('@/app/(admin)/(app)/notes'));
 
 // dashboard
-const Analytics = lazy(() => import('@/app/(admin)/(dashboards)/analytics'));
-const Email = lazy(() => import('@/app/(admin)/(dashboards)/email'));
-const Hr = lazy(() => import('@/app/(admin)/(dashboards)/hr'));
-const Ecommerce = lazy(() => import('@/app/(admin)/(dashboards)/index'));
+const Student = lazy(() => import('@/app/(admin)/(dashboards)/student'));
+const Teacher = lazy(() => import('@/app/(admin)/(dashboards)/teacher'));
+const School = lazy(() => import('@/app/(admin)/(dashboards)/school'));
+const Admin = lazy(() => import('@/app/(admin)/(dashboards)/index'));
 
 // layouts
 const DarkMode = lazy(() => import('@/app/(admin)/(layouts)/dark-mode'));
@@ -94,18 +88,23 @@ const Maintenance = lazy(() => import('@/app/(others)/maintenance'));
 const Offline = lazy(() => import('@/app/(others)/offline'));
 
 export const layoutsRoutes = [
-  { path: '/admin/dashboard', name: 'Dashboard', element: <Ecommerce /> },
-  { path: '/cart', name: 'Cart', element: <Cart /> },
-  { path: '/checkout', name: 'Checkout', element: <Checkout /> },
-  { path: '/order-overview', name: 'OrderOverview', element: <OrderOverview /> },
-  { path: '/orders', name: 'Orders', element: <Orders /> },
-  { path: '/product-create', name: 'ProductCreate', element: <ProductCreate /> },
-  { path: '/product-grid', name: 'ProductGrid', element: <ProductGrid /> },
-  { path: '/product-list', name: 'ProductList', element: <ProductList /> },
-  { path: '/product-overview', name: 'ProductOverview', element: <ProductOverview /> },
-  { path: '/sellers', name: 'Sellers', element: <Sellers /> },
+  { path: '/admin/dashboard', name: 'DashboardA', element: <Admin />,
+    roles: [ROLES.SUPER_ADMIN] },
+  { path: '/school/dashboard', name: 'DashboardSc', element: <School />,
+    roles: [ROLES.SCHOOL] },
+  { path: '/student/dashboard', name: 'DashboardSt', element: <Student />,
+    roles: [ROLES.STUDENT]},
+  { path: '/teacher/dashboard', name: 'DashboardT', element: <Teacher />,
+    roles: [ROLES.TEACHER] },
 
-  { path: '/attendance', name: 'Attendances', element: <Attendances /> },
+  { path: '/admin/regions', name: 'Regions', element: <Regions />,roles: [ROLES.SUPER_ADMIN]},
+  { path: '/admin/directorates', name: 'Directorates', element: <Directorate /> ,roles: [ROLES.SUPER_ADMIN]},
+  { path: '/admin/districts', name: 'Districts', element: <District /> ,roles: [ROLES.SUPER_ADMIN]},
+  { path: '/admin/cluster', name: 'Cluster', element: <Cluster /> ,roles: [ROLES.SUPER_ADMIN]},
+  { path: '/admin/years', name: 'Years', element: <Years /> ,roles: [ROLES.SUPER_ADMIN]},
+  { path: '/admin/licences', name: 'Licences', element: <Licences /> ,roles: [ROLES.SUPER_ADMIN]},
+
+  { path: '/admin/regions/create', name: 'AddRegion', element: <AddRegion /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/attendance-main', name: 'AttemdanceMain', element: <AttemdanceMain /> },
   { path: '/create-leave', name: 'CreateLeave', element: <CreateLeave /> },
   { path: '/create-leave-employee', name: 'CreateLeaveEmployee', element: <CreateLeaveEmployee /> },
@@ -120,10 +119,6 @@ export const layoutsRoutes = [
     name: 'PayrollEmplyoeeSalary',
     element: <PayrollEmplyoeeSalary />,
   },
-  { path: '/payroll-payslip', name: 'PayRollSlip', element: <PayRollSlip /> },
-  { path: '/sales-estimates', name: 'SalesEstimate', element: <SalesEstimate /> },
-  { path: '/sales-expenses', name: 'SalesExpense', element: <SalesExpense /> },
-  { path: '/sales-payments', name: 'SalePayment', element: <SalePayment /> },
 
   { path: '/add-new', name: 'InvoiceAddNew', element: <InvoiceAddNew /> },
   { path: '/list', name: 'InvoiceList', element: <InvoiceList /> },
@@ -137,10 +132,10 @@ export const layoutsRoutes = [
   { path: '/mailbox', name: 'MailBox', element: <MailBox /> },
   { path: '/notes', name: 'Notes', element: <Notes /> },
 
-  { path: '/analytics', name: 'Analytics', element: <Analytics /> },
-  { path: '/', name: 'Ecommerce', element: <Ecommerce /> },
-  { path: '/email', name: 'Email', element: <Email /> },
-  { path: '/hr', name: 'Hr', element: <Hr /> },
+  { path: '/analytics', name: 'Analytics', element: <Student /> },
+  { path: '/', name: 'pages', element: <Admin /> },
+  { path: '/email', name: 'Email', element: <Teacher /> },
+  { path: '/hr', name: 'Hr', element: <School /> },
 
   { path: '/dark-mode', name: 'DarkMode', element: <DarkMode /> },
   { path: '/rtl-mode', name: 'RtlMode', element: <RTL /> },
