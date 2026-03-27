@@ -1,10 +1,13 @@
 import { getDistricts } from "@/services/district.service";
 import { Link } from 'react-router';
+import { useNavigate } from "react-router-dom";
 import {
   LuChevronLeft,
   LuChevronRight,
+  LuCircleCheck,
   LuEllipsis,
   LuEye,
+  LuLoader,
   LuPlus,
   LuSearch,
   LuSlidersHorizontal,
@@ -28,10 +31,11 @@ type District = {
 };
 
 const DistrictListTabel = () => {
- const [districts, setDistricts] = useState<District[]>([]);
+  const navigate = useNavigate();
+  const [districts, setDistricts] = useState<District[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-    useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
 
@@ -56,8 +60,8 @@ const DistrictListTabel = () => {
   return (
     <div className="card">
       <div className="card-header">
-        <h6 className="card-title">List</h6>
-        <button className="btn btn-sm bg-primary text-white">
+        <h6 className="card-title">All Districts</h6>
+        <button onClick={() => navigate("/admin/districts/create")} className="btn btn-sm bg-primary text-white">
           <LuPlus className="size-4 me-1" />
           Add District
         </button>
@@ -89,9 +93,13 @@ const DistrictListTabel = () => {
       </div>
 
       <div className="flex flex-col">
-        
-                {loading && <p>Loading...</p>}
-                {error && <p className="text-red-500">{error}</p>}
+
+        {/* LOADING */}
+        {loading && <span className="p-4 text-danger font-medium text-center"><LuLoader className="animate-spin" /> Loading...</span>}
+
+        {/* ERROR */}
+        {error && <p className="py-1 px-4 mb-4 external-event fc-event font-medium bg-danger/10 text-danger rounded" data-class="!text-danger">{error}</p>}
+
 
         <div className="overflow-x-auto">
           <div className="min-w-full inline-block align-middle">
@@ -101,7 +109,6 @@ const DistrictListTabel = () => {
               <table className="min-w-full divide-y divide-default-200">
                 <thead className="bg-default-150">
                   <tr className="text-sm font-normal text-default-700 whitespace-nowrap">
-                    <th className="px-3.5 py-3 text-start">ID</th>
                     <th className="px-3.5 py-3 text-start">District</th>
                     <th className="px-3.5 py-3 text-start">Directorate</th>
                     <th className="px-3.5 py-3 text-start">Region</th>
@@ -115,11 +122,24 @@ const DistrictListTabel = () => {
                       key={dis.id}
                       className="text-default-800 font-normal text-sm whitespace-nowrap"
                     >
-                      <td className="px-3.5 py-3 text-primary">{dis.id}</td>
-                    <td className="py-3 px-3.5">{dis.name}</td>
-                    <td className="py-3 px-3.5">{dis.directorate?.name}</td>
-                    <td className="py-3 px-3.5">{dis.directorate?.region?.name}</td>
-                    <td className="py-3 px-3.5">{dis._count?.clusters}</td>
+                      <td className="py-3 px-3.5">{dis.name}</td>
+                      <td className="py-3 px-3.5">{dis.directorate?.name}</td>
+                      <td className="py-3 px-3.5">{dis.directorate?.region?.name}</td>
+                      <td className="py-3 px-3.5">
+
+                        {dis._count?.clusters !== 0 && (
+                          <span className="py-0.5 px-2.5 inline-flex items-center gap-x-1 text-xs font-medium bg-success/10 text-success rounded">
+                            <LuCircleCheck className="size-3" />
+                            {dis._count?.clusters}
+                          </span>
+                        )}
+                        {dis._count?.clusters === 0 && (
+                          <span className="py-0.5 px-2.5 inline-flex items-center gap-x-1 text-xs font-medium bg-default-200 text-default-600 rounded">
+                            <LuLoader className="size-3" />
+                            None
+                          </span>
+                        )}
+                      </td>
                       <td className="px-3.5 py-3">
                         <div className="hs-dropdown relative inline-flex">
                           <button
@@ -158,15 +178,15 @@ const DistrictListTabel = () => {
 
             </div>
           </div>
-        
-        {/* EMPTY */}
-        {!loading && districts.length === 0 && (
-          <p className="p-4 text-center">Aucun district trouvé</p>
-        )}
+
+          {/* EMPTY */}
+          {!loading && districts.length === 0 && (
+            <p className="p-4 text-center">Aucun district trouvé</p>
+          )}
         </div>
         <div className="card-footer">
           <p className="text-default-500 text-sm">
-            Showing <b>10</b> of <b>58</b> Results
+            Showing <b>{districts.length}</b> of <b>{districts.length}</b> Results
           </p>
           <nav className="flex items-center gap-2" aria-label="Pagination">
             <button

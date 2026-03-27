@@ -1,10 +1,13 @@
 import { getDirectorates } from "@/services/dir.service";
 import { Link } from 'react-router';
+import { useNavigate } from "react-router-dom";
 import {
   LuChevronLeft,
   LuChevronRight,
+  LuCircleCheck,
   LuEllipsis,
   LuEye,
+  LuLoader,
   LuPlus,
   LuSearch,
   LuSlidersHorizontal,
@@ -25,6 +28,7 @@ type Directorate = {
 };
 
 const DirectorateListTabel = () => {
+  const navigate = useNavigate();
  const [directorates, setDirectorates] = useState<Directorate[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -35,7 +39,7 @@ const DirectorateListTabel = () => {
       try {
         const data = await getDirectorates();
 
-        console.log("DATA:", data);
+        console.log("DIRECTORATE:", data);
 
         setDirectorates(data); // ✅ ici c’est direct
       } catch (err: any) {
@@ -53,8 +57,8 @@ const DirectorateListTabel = () => {
   return (
     <div className="card">
       <div className="card-header">
-        <h6 className="card-title">List</h6>
-        <button className="btn btn-sm bg-primary text-white">
+        <h6 className="card-title">Directorates List</h6>
+        <button onClick={() => navigate("/admin/directorates/create")} className="btn btn-sm bg-primary text-white">
           <LuPlus className="size-4 me-1" />
           Add Directorate
         </button>
@@ -86,9 +90,13 @@ const DirectorateListTabel = () => {
       </div>
 
       <div className="flex flex-col">
-        
-                {loading && <p>Chargement...</p>}
-                {error && <p className="text-red-500">{error}</p>}
+       
+         {/* LOADING */}
+        {loading && <span className="p-4 text-danger font-medium text-center"><LuLoader className="animate-spin" /> Loading...</span>}
+
+        {/* ERROR */}
+        {error && <p className="py-1 px-4 mb-4 external-event fc-event font-medium bg-danger/10 text-danger rounded" data-class="!text-danger">{error}</p>}
+
         <div className="overflow-x-auto">
           <div className="min-w-full inline-block align-middle">
             <div className="overflow-hidden">
@@ -97,7 +105,6 @@ const DirectorateListTabel = () => {
               <table className="min-w-full divide-y divide-default-200">
                 <thead className="bg-default-150">
                   <tr className="text-sm font-normal text-default-700 whitespace-nowrap">
-                    <th className="px-3.5 py-3 text-start">ID</th>
                     <th className="px-3.5 py-3 text-start">Name</th>
                     <th className="px-3.5 py-3 text-start">Region</th>
                     <th className="px-3.5 py-3 text-start">District</th>
@@ -110,10 +117,22 @@ const DirectorateListTabel = () => {
                       key={dir.id}
                       className="text-default-800 font-normal text-sm whitespace-nowrap"
                     >
-                      <td className="px-3.5 py-3 text-primary">{dir.id}</td>
                     <td className="py-3 px-3.5">{dir.name}</td>
                     <td className="py-3 px-3.5">{dir.region?.name}</td>
-                    <td className="py-3 px-3.5">{dir._count?.districts}</td>
+                    <td className="py-3 px-3.5">
+                        {dir._count?.districts !== 0 && (
+                          <span className="py-0.5 px-2.5 inline-flex items-center gap-x-1 text-xs font-medium bg-success/10 text-success rounded">
+                            <LuCircleCheck className="size-3" />
+                            {dir._count?.districts}
+                          </span>
+                        )}
+                        {dir._count?.districts === 0 && (
+                          <span className="py-0.5 px-2.5 inline-flex items-center gap-x-1 text-xs font-medium bg-default-200 text-default-600 rounded">
+                            <LuLoader className="size-3" />
+                            None
+                          </span>
+                        )}
+                      </td>
                       <td className="px-3.5 py-3">
                         <div className="hs-dropdown relative inline-flex">
                           <button
@@ -154,12 +173,12 @@ const DirectorateListTabel = () => {
           </div>
           
       {!loading && directorates.length === 0 && (
-        <p className="p-4 text-center">Aucune donnée</p>
+        <p className="p-4 text-center">No Data</p>
       )}
         </div>
         <div className="card-footer">
           <p className="text-default-500 text-sm">
-            Showing <b>10</b> of <b>58</b> Results
+            Showing <b>{directorates.length}</b> of <b>{directorates.length}</b> Results
           </p>
           <nav className="flex items-center gap-2" aria-label="Pagination">
             <button

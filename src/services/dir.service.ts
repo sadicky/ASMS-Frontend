@@ -1,6 +1,24 @@
 import api from "@/lib/api";
 
 export const getDirectorates = async () => {
-  const response = await api.get("/directorates/all");
+  const response = await api.get("/directorates");
   return response.data;
+};
+
+export const createDirectorate = async (data: {
+  name: string;
+  regionId: string;
+}) => {
+  const response = await api.post("/directorates/create", data);
+  return response.data;
+};
+
+export const getDirectoratesByRegion = async (regionId: string) => {
+  if (!regionId) return [];
+
+  const res = await api.get("/directorates", {
+    params: { regionId },
+  });
+
+  return res.data.data;
 };

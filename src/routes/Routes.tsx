@@ -13,18 +13,10 @@ const Licences = lazy(() => import('@/app/(admin)/(app)/(pages)/product-grid'));
 // add page
 
 const AddRegion = lazy(() => import('@/app/(admin)/(app)/(pages)/regions/add-new'));
-const AttemdanceMain = lazy(() => import('@/app/(admin)/(app)/(hr)/attendance-main'));
-const CreateLeave = lazy(() => import('@/app/(admin)/(app)/(hr)/create-leave'));
-const CreateLeaveEmployee = lazy(() => import('@/app/(admin)/(app)/(hr)/create-leave-employee'));
-const CreatePayslip = lazy(() => import('@/app/(admin)/(app)/(hr)/create-payslip'));
-const Department = lazy(() => import('@/app/(admin)/(app)/(hr)/department'));
-const Employee = lazy(() => import('@/app/(admin)/(app)/(hr)/employee'));
-const Holidays = lazy(() => import('@/app/(admin)/(app)/(hr)/holidays'));
-const Leave = lazy(() => import('@/app/(admin)/(app)/(hr)/leave'));
-const LeaveEmployee = lazy(() => import('@/app/(admin)/(app)/(hr)/leave-employee'));
-const PayrollEmplyoeeSalary = lazy(
-  () => import('@/app/(admin)/(app)/(hr)/payroll-employee-salary')
-);
+const AddDirectorate = lazy(() => import('@/app/(admin)/(app)/(pages)/directorates/add-new'));
+const AddDistrict = lazy(() => import('@/app/(admin)/(app)/(pages)/district/add-new'));
+const AddCluster = lazy(() => import('@/app/(admin)/(app)/(pages)/cluster/add-new'));
+const AddSchool = lazy(() => import('@/app/(admin)/(app)/(hr)/create-leave'));
 
 // admin invoice
 
@@ -105,20 +97,10 @@ export const layoutsRoutes = [
   { path: '/admin/licences', name: 'Licences', element: <Licences /> ,roles: [ROLES.SUPER_ADMIN]},
 
   { path: '/admin/regions/create', name: 'AddRegion', element: <AddRegion /> ,roles: [ROLES.SUPER_ADMIN]},
-  { path: '/attendance-main', name: 'AttemdanceMain', element: <AttemdanceMain /> },
-  { path: '/create-leave', name: 'CreateLeave', element: <CreateLeave /> },
-  { path: '/create-leave-employee', name: 'CreateLeaveEmployee', element: <CreateLeaveEmployee /> },
-  { path: '/create-payslip', name: 'CreatePayslip', element: <CreatePayslip /> },
-  { path: '/department', name: 'Department', element: <Department /> },
-  { path: '/employee', name: 'Employee', element: <Employee /> },
-  { path: '/holidays', name: 'Holidays', element: <Holidays /> },
-  { path: '/leave', name: 'Leave', element: <Leave /> },
-  { path: '/leave-employee', name: 'LeaveEmployee', element: <LeaveEmployee /> },
-  {
-    path: '/payroll-employee-salary',
-    name: 'PayrollEmplyoeeSalary',
-    element: <PayrollEmplyoeeSalary />,
-  },
+  { path: '/admin/directorates/create', name: 'AddDirectorate', element: <AddDirectorate /> ,roles: [ROLES.SUPER_ADMIN]},
+  { path: '/admin/districts/create', name: 'AddDistrict', element: <AddDistrict /> ,roles: [ROLES.SUPER_ADMIN]},
+  { path: '/admin/cluster/create', name: 'AddCluster', element: <AddCluster /> ,roles: [ROLES.SUPER_ADMIN]},
+
 
   { path: '/add-new', name: 'InvoiceAddNew', element: <InvoiceAddNew /> },
   { path: '/list', name: 'InvoiceList', element: <InvoiceList /> },

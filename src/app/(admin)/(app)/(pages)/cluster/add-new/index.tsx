@@ -1,14 +1,14 @@
 import PageBreadcrumb from '@/components/PageBreadcrumb';
-import DirListTabel from './components/DistrictListTabel';
+import AddNew from './components/AddNew';
 import PageMeta from '@/components/PageMeta';
 
 const Index = () => {
   return (
     <>
-      <PageMeta title="Districts View" />
+      <PageMeta title="Add Region" />
       <main>
-        <PageBreadcrumb subtitle="District" title="List view" />
-        <DirListTabel />
+        <PageBreadcrumb title="Add Region" subtitle="Menu" />
+        <AddNew />
       </main>
     </>
   );

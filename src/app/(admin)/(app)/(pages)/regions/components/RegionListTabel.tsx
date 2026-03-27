@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import {
   LuChevronLeft,
   LuChevronRight,
+  LuCircleCheck,
   LuEllipsis,
   LuEye,
+  LuLoader,
   LuPlus,
   LuSearch,
   LuSquarePen,
@@ -21,10 +23,10 @@ type Region = {
   };
 };
 const RegionListTabel = () => {
- const [regions, setRegions] = useState<Region[]>([]);
+  const [regions, setRegions] = useState<Region[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRegions = async () => {
@@ -36,7 +38,7 @@ const navigate = useNavigate();
         console.log("REGIONS:", data);
 
         setRegions(data);
-        } catch (err: any) {
+      } catch (err: any) {
         setError(
           err.response?.data?.message ||
           "Erreur lors du chargement des régions"
@@ -54,7 +56,7 @@ const navigate = useNavigate();
       <div className="card-header">
         <h6 className="card-title">Regions List</h6>
         <button className="btn btn-sm bg-primary text-white"
-         onClick={() => navigate("/admin/regions/create")}>
+          onClick={() => navigate("/admin/regions/create")}>
           <LuPlus className="size-4 me-1" />
           Add Region
         </button>
@@ -77,11 +79,11 @@ const navigate = useNavigate();
 
       <div className="flex flex-col">
 
-      {/* LOADING */}
-      {loading && <p className="p-4">Loading...</p>}
+        {/* LOADING */}
+        {loading && <span className="p-4 text-danger font-medium text-center"><LuLoader className="animate-spin" /> Loading...</span>}
 
-      {/* ERROR */}
-      {error && <p className="py-1 px-4 mb-4 external-event fc-event font-medium bg-danger/10 text-danger rounded" data-class="!text-danger">{error}</p>}
+        {/* ERROR */}
+        {error && <p className="py-1 px-4 mb-4 external-event fc-event font-medium bg-danger/10 text-danger rounded" data-class="!text-danger">{error}</p>}
 
         <div className="overflow-x-auto">
           <div className="min-w-full inline-block align-middle">
@@ -101,7 +103,20 @@ const navigate = useNavigate();
                       className="text-default-800 font-normal text-sm whitespace-nowrap"
                     >
                       <td className="py-3 px-3.5">{region.name}</td>
-                      <td className="py-3 px-3.5">{region._count?.directorates}</td>
+                      <td className="py-3 px-3.5">
+                        {region._count?.directorates !== 0 && (
+                          <span className="py-0.5 px-2.5 inline-flex items-center gap-x-1 text-xs font-medium bg-success/10 text-success rounded">
+                            <LuCircleCheck className="size-3" />
+                            {region._count?.directorates}
+                          </span>
+                        )}
+                        {region._count?.directorates === 0 && (
+                          <span className="py-0.5 px-2.5 inline-flex items-center gap-x-1 text-xs font-medium bg-default-200 text-default-600 rounded">
+                            <LuLoader className="size-3" />
+                            None
+                          </span>
+                        )}
+                      </td>
                       <td className="px-3.5 py-3">
                         <div className="hs-dropdown relative inline-flex">
                           <button
@@ -138,14 +153,14 @@ const navigate = useNavigate();
               </table>
             </div>
           </div>
-           {/* EMPTY */}
-        {!loading && regions.length === 0 && (
-          <p className="p-4 text-center">No Data</p>
-        )}
+          {/* EMPTY */}
+          {!loading && regions.length === 0 && (
+            <p className="p-4 text-center">No Data</p>
+          )}
         </div>
         <div className="card-footer">
           <p className="text-default-500 text-sm">
-            Showing <b>10</b> of <b>58</b> Results
+            Showing <b>{regions.length}</b> of <b>{regions.length}</b> Results
           </p>
           <nav className="flex items-center gap-2" aria-label="Pagination">
             <button
