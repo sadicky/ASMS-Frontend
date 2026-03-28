@@ -23,8 +23,8 @@ const AddDirectorate = () => {
   useEffect(() => {
     const fetchRegions = async () => {
       try {
-        const data = await getRegions();
-        setRegions(data);
+        const res = await getRegions({ page: 1, limit: 100 });
+        setRegions(res.data);
       } catch {
         toast.error("Error loading regions");
       }

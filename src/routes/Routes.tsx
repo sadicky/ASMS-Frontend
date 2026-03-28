@@ -92,14 +92,14 @@ export const layoutsRoutes = [
   { path: '/admin/regions', name: 'Regions', element: <Regions />,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/directorates', name: 'Directorates', element: <Directorate /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/districts', name: 'Districts', element: <District /> ,roles: [ROLES.SUPER_ADMIN]},
-  { path: '/admin/cluster', name: 'Cluster', element: <Cluster /> ,roles: [ROLES.SUPER_ADMIN]},
+  { path: '/admin/clusters', name: 'Cluster', element: <Cluster /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/years', name: 'Years', element: <Years /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/licences', name: 'Licences', element: <Licences /> ,roles: [ROLES.SUPER_ADMIN]},
 
   { path: '/admin/regions/create', name: 'AddRegion', element: <AddRegion /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/directorates/create', name: 'AddDirectorate', element: <AddDirectorate /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/districts/create', name: 'AddDistrict', element: <AddDistrict /> ,roles: [ROLES.SUPER_ADMIN]},
-  { path: '/admin/cluster/create', name: 'AddCluster', element: <AddCluster /> ,roles: [ROLES.SUPER_ADMIN]},
+  { path: '/admin/clusters/create', name: 'AddCluster', element: <AddCluster /> ,roles: [ROLES.SUPER_ADMIN]},
 
 
   { path: '/add-new', name: 'InvoiceAddNew', element: <InvoiceAddNew /> },

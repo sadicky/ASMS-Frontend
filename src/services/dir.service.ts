@@ -1,7 +1,7 @@
 import api from "@/lib/api";
 
-export const getDirectorates = async () => {
-  const response = await api.get("/directorates");
+export const getDirectorates = async (params: any) => {
+  const response = await api.get("/directorates", { params });
   return response.data;
 };
 

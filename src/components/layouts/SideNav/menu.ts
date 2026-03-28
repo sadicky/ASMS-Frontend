@@ -96,7 +96,7 @@ export const menuItemsData: MenuItemType[] = [
     key: 'Clusters',
     label: 'Clusters',
     icon: LuShare2,
-    href: '/admin/cluster',
+    href: '/admin/clusters',
   },
   {
     key: 'Years',

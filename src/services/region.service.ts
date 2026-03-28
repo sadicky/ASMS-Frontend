@@ -1,7 +1,7 @@
 import api from "@/lib/api";
 
-export const getRegions = async () => {
-  const response = await api.get("/regions/all");
+export const getRegions = async (params: any) => {
+  const response = await api.get("/regions", {params });
   return response.data;
 };
 

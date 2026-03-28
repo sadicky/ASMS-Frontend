@@ -5,9 +5,9 @@ import PageMeta from '@/components/PageMeta';
 const Index = () => {
   return (
     <>
-      <PageMeta title="Directorates View" />
+      <PageMeta title="Clusters View" />
       <main>
-        <PageBreadcrumb subtitle="Directorates" title="List view" />
+        <PageBreadcrumb subtitle="Clusters" title="List view" />
         <DirListTabel />
       </main>
     </>

@@ -29,23 +29,32 @@ type Directorate = {
 
 const DirectorateListTabel = () => {
   const navigate = useNavigate();
+
  const [directorates, setDirectorates] = useState<Directorate[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState("");  
+
+  const [search, setSearch] = useState("");
+  const [meta, setMeta] = useState<any>({});
+  const [page, setPage] = useState(1);
+  const limit = 10;
+
     useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
 
       try {
-        const data = await getDirectorates();
+        const data = await getDirectorates({ page, limit, search });
 
-        console.log("DIRECTORATE:", data);
+        // console.log("DIRECTORATE:", data);
 
-        setDirectorates(data); // ✅ ici c’est direct
+        setDirectorates(data.data); // ✅ ici c’est direct
+        setMeta(data.meta);
+        
       } catch (err: any) {
         setError(
           err.response?.data?.message ||
-          "Erreur lors du chargement"
+          "Error loading directorates"
         );
       } finally {
         setLoading(false);
@@ -53,7 +62,7 @@ const DirectorateListTabel = () => {
     };
 
     fetchData();
-  }, []);
+  }, [page, search]);
   return (
     <div className="card">
       <div className="card-header">
@@ -68,9 +77,14 @@ const DirectorateListTabel = () => {
         <div className="md:flex items-center md:space-y-0 space-y-4 gap-3">
           <div className="relative">
             <input
-              type="email"
+              type="text"
+              value={search}
+              onChange={(e) => {
+                setPage(1); // reset pagination
+                setSearch(e.target.value);
+              }}
               className="form-input form-input-sm ps-9"
-              placeholder="Search for name,email"
+              placeholder="Search for directorate"
             />
             <div className="absolute inset-y-0 start-0 flex items-center ps-3">
               <LuSearch className="size-3.5 flex items-center text-default-500 fill-default-100" />
@@ -176,19 +190,33 @@ const DirectorateListTabel = () => {
         <p className="p-4 text-center">No Data</p>
       )}
         </div>
+        
         <div className="card-footer">
+          {/* INFO */}
           <p className="text-default-500 text-sm">
-            Showing <b>{directorates.length}</b> of <b>{directorates.length}</b> Results
+            Showing{" "}
+            <b>
+              {(meta.page - 1) * limit + 1}
+            </b>{" "}
+            to{" "}
+            <b>
+              {Math.min(meta.page * limit, meta.total || 0)}
+            </b>{" "}
+            of <b>{meta.total || 0}</b> Results
           </p>
+          {/* PAGINATION */}
           <nav className="flex items-center gap-2" aria-label="Pagination">
+            {/* PREV */}
             <button
+              disabled={meta.page === 1}
+              onClick={() => setPage(meta.page - 1)}
               type="button"
               className="btn btn-sm border bg-transparent border-default-200 text-default-600 hover:bg-primary/10 hover:text-primary hover:border-primary/10"
             >
               <LuChevronLeft className="size-4 me-1" /> Prev
             </button>
 
-            <button
+            {/* <button
               type="button"
               className="btn size-7.5 bg-transparent border border-default-200 text-default-600 hover:bg-primary/10 hover:text-primary hover:border-primary/10"
             >
@@ -204,9 +232,24 @@ const DirectorateListTabel = () => {
               className="btn size-7.5 bg-transparent border border-default-200 text-default-600 hover:bg-primary/10 hover:text-primary hover:border-primary/10"
             >
               3
-            </button>
-
+            </button> */}
+            {/* PAGES */}
+            {Array.from({ length: meta.lastPage || 1 }, (_, i) => i + 1).map((p) => (
+              <button
+                key={p}
+                onClick={() => setPage(p)}
+                className={`btn size-7.5 ${meta.page === p
+                    ? "bg-primary text-white"
+                    : "border"
+                  }`}
+              >
+                {p}
+              </button>
+            ))}
+            {/* NEXT */}
             <button
+              disabled={meta.page === meta.lastPage}
+              onClick={() => setPage(meta.page + 1)}
               type="button"
               className="btn btn-sm border bg-transparent border-default-200 text-default-600 hover:bg-primary/10 hover:text-primary hover:border-primary/10"
             >

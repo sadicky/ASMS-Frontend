@@ -1,10 +1,12 @@
 import { getClusters } from "@/services/cluster.service";
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import {
   LuChevronLeft,
   LuChevronRight,
+  LuCircleCheck,
   LuEllipsis,
   LuEye,
+  LuLoader,
   LuPlus,
   LuSearch,
   LuSlidersHorizontal,
@@ -31,24 +33,44 @@ type Cluster = {
 };
 
 const ClusterListTabel = () => {
- const [clusters, setClusters] = useState<Cluster[]>([]);
+  const navigate = useNavigate();
+  const [clusters, setClusters] = useState<Cluster[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const [search, setSearch] = useState("");
+
+  const [regionId, setRegionId] = useState("");
+  const [directorateId, setDirectorateId] = useState("");
+  const [districtId, setDistrictId] = useState("");
+
+  const [meta, setMeta] = useState<any>({});
+  const [page, setPage] = useState(1);
+  const limit = 10;
+
 
   useEffect(() => {
     const fetchClusters = async () => {
       setLoading(true);
 
       try {
-        const data = await getClusters();
+        const res = await getClusters({
+          page,
+          limit,
+          search,
+          regionId,
+          directorateId,
+          districtId,
+        });
 
-        console.log("CLUSTERS:", data);
+        // console.log("CLUSTERS:", res);
+        setClusters(res.data); // ✅ tableau
+        setMeta(res.meta);     // ✅ pagination
 
-        setClusters(data);
       } catch (err: any) {
         setError(
           err.response?.data?.message ||
-          "Erreur lors du chargement des clusters"
+          "Error loading clusters"
         );
       } finally {
         setLoading(false);
@@ -56,13 +78,14 @@ const ClusterListTabel = () => {
     };
 
     fetchClusters();
-  }, []);
+
+  }, [page, search, regionId, directorateId, districtId]);
 
   return (
     <div className="card">
       <div className="card-header">
         <h6 className="card-title">List</h6>
-        <button className="btn btn-sm bg-primary text-white">
+        <button onClick={() => navigate("/admin/clusters/create")} className="btn btn-sm bg-primary text-white">
           <LuPlus className="size-4 me-1" />
           Add Cluster
         </button>
@@ -72,9 +95,14 @@ const ClusterListTabel = () => {
         <div className="md:flex items-center md:space-y-0 space-y-4 gap-3">
           <div className="relative">
             <input
-              type="email"
+              type="text"
+              value={search}
+              onChange={(e) => {
+                setPage(1); // reset pagination
+                setSearch(e.target.value);
+              }}
               className="form-input form-input-sm ps-9"
-              placeholder="Search for name,email"
+              placeholder="Search for Clusters, Districts, Directorates and Regions"
             />
             <div className="absolute inset-y-0 start-0 flex items-center ps-3">
               <LuSearch className="size-3.5 flex items-center text-default-500 fill-default-100" />
@@ -94,9 +122,10 @@ const ClusterListTabel = () => {
       </div>
 
       <div className="flex flex-col">
-        
-                {loading && <p>Loading...</p>}
-                {error && <p className="text-red-500">{error}</p>}
+
+        {loading && <span className="p-4 text-danger font-medium text-center"><LuLoader className="animate-spin" /> Loading...</span>}
+
+        {error && <p className="text-red-500">{error}</p>}
 
         <div className="overflow-x-auto">
           <div className="min-w-full inline-block align-middle">
@@ -106,7 +135,6 @@ const ClusterListTabel = () => {
               <table className="min-w-full divide-y divide-default-200">
                 <thead className="bg-default-150">
                   <tr className="text-sm font-normal text-default-700 whitespace-nowrap">
-                    <th className="px-3.5 py-3 text-start">ID</th>
                     <th className="px-3.5 py-3 text-start">Cluster</th>
                     <th className="px-3.5 py-3 text-start">District</th>
                     <th className="px-3.5 py-3 text-start">Directorate</th>
@@ -121,12 +149,24 @@ const ClusterListTabel = () => {
                       key={cl.id}
                       className="text-default-800 font-normal text-sm whitespace-nowrap"
                     >
-                      <td className="px-3.5 py-3 text-primary">{cl.id}</td>
-                    <td className="py-3 px-3.5">{cl.name}</td>
-                    <td className="py-3 px-3.5">{cl.district?.name}</td>
-                    <td className="py-3 px-3.5">{cl.district?.directorate?.name}</td>
-                    <td className="py-3 px-3.5">{cl.district?.directorate?.region?.name}</td>
-                    <td className="py-3 px-3.5">{cl._count?.schools}</td>
+                      <td className="py-3 px-3.5  text-primary">{cl.name}</td>
+                      <td className="py-3 px-3.5">{cl.district?.name}</td>
+                      <td className="py-3 px-3.5">{cl.district?.directorate?.name}</td>
+                      <td className="py-3 px-3.5">{cl.district?.directorate?.region?.name}</td>
+                      <td className="py-3 px-3.5">
+                        {cl._count?.schools !== 0 && (
+                          <span className="py-0.5 px-2.5 inline-flex items-center gap-x-1 text-xs font-medium bg-success/10 text-success rounded">
+                            <LuCircleCheck className="size-3" />
+                            {cl._count?.schools}
+                          </span>
+                        )}
+                        {cl._count?.schools === 0 && (
+                          <span className="py-0.5 px-2.5 inline-flex items-center gap-x-1 text-xs font-medium bg-default-200 text-default-600 rounded">
+                            <LuLoader className="size-3" />
+                            None
+                          </span>
+                        )}
+                      </td>
                       <td className="px-3.5 py-3">
                         <div className="hs-dropdown relative inline-flex">
                           <button
@@ -165,24 +205,38 @@ const ClusterListTabel = () => {
 
             </div>
           </div>
-        {/* EMPTY */}
-        {!loading && clusters.length === 0 && (
-          <p className="p-4 text-center">No DATA</p>
-        )}
+          {/* EMPTY */}
+          {!loading && clusters.length === 0 && (
+            <p className="p-4 text-center">No DATA</p>
+          )}
         </div>
+
         <div className="card-footer">
+          {/* INFO */}
           <p className="text-default-500 text-sm">
-            Showing <b>10</b> of <b>58</b> Results
+            Showing{" "}
+            <b>
+              {(meta.page - 1) * limit + 1}
+            </b>{" "}
+            to{" "}
+            <b>
+              {Math.min(meta.page * limit, meta.total || 0)}
+            </b>{" "}
+            of <b>{meta.total || 0}</b> Results
           </p>
+          {/* PAGINATION */}
           <nav className="flex items-center gap-2" aria-label="Pagination">
+            {/* PREV */}
             <button
+              disabled={meta.page === 1}
+              onClick={() => setPage(meta.page - 1)}
               type="button"
               className="btn btn-sm border bg-transparent border-default-200 text-default-600 hover:bg-primary/10 hover:text-primary hover:border-primary/10"
             >
               <LuChevronLeft className="size-4 me-1" /> Prev
             </button>
 
-            <button
+            {/* <button
               type="button"
               className="btn size-7.5 bg-transparent border border-default-200 text-default-600 hover:bg-primary/10 hover:text-primary hover:border-primary/10"
             >
@@ -198,9 +252,24 @@ const ClusterListTabel = () => {
               className="btn size-7.5 bg-transparent border border-default-200 text-default-600 hover:bg-primary/10 hover:text-primary hover:border-primary/10"
             >
               3
-            </button>
-
+            </button> */}
+            {/* PAGES */}
+            {Array.from({ length: meta.lastPage || 1 }, (_, i) => i + 1).map((p) => (
+              <button
+                key={p}
+                onClick={() => setPage(p)}
+                className={`btn size-7.5 ${meta.page === p
+                    ? "bg-primary text-white"
+                    : "border"
+                  }`}
+              >
+                {p}
+              </button>
+            ))}
+            {/* NEXT */}
             <button
+              disabled={meta.page === meta.lastPage}
+              onClick={() => setPage(meta.page + 1)}
               type="button"
               className="btn btn-sm border bg-transparent border-default-200 text-default-600 hover:bg-primary/10 hover:text-primary hover:border-primary/10"
             >
