@@ -40,8 +40,14 @@ export const colorVariants = [
 
 export const ROLES = {
   SUPER_ADMIN: "SUPER_ADMIN",
-  NGO: "ADMIN",
-  SCHOOL: "SCHOOL_ADMIN",
+  SCHOOL_ADMIN: "SCHOOL_ADMIN",
   TEACHER: "TEACHER",
   STUDENT: "STUDENT"
+} as const;
+
+export const ROLE_BASE_PATH = {
+  SUPER_ADMIN: "/admin",
+  SCHOOL_ADMIN: "/school",
+  TEACHER: "/teacher",
+  STUDENT: "/student",
 } as const;

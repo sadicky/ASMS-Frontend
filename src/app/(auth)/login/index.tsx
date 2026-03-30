@@ -49,7 +49,7 @@ const Index = () => {
       // ✅ Stocker user
       localStorage.setItem("user", JSON.stringify(user));
 
-      console.log("USER:", user);
+      // console.log("USER:", user);
 
       // 🔥 Redirection selon role 
       if (user.roles.includes("SUPER_ADMIN")) {

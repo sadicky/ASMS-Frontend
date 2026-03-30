@@ -7,8 +7,8 @@ const Regions = lazy(() => import('@/app/(admin)/(app)/(pages)/regions'));
 const Directorate = lazy(() => import('@/app/(admin)/(app)/(pages)/directorates'));
 const District = lazy(() => import('@/app/(admin)/(app)/(pages)/district'));
 const Cluster = lazy(() => import('@/app/(admin)/(app)/(pages)/cluster'));
-const Years = lazy(() => import('@/app/(admin)/(app)/(pages)/product-create'));
-const Licences = lazy(() => import('@/app/(admin)/(app)/(pages)/product-grid'));
+const Years = lazy(() => import('@/app/(admin)/(app)/(pages)/years'));
+const Licences = lazy(() => import('@/app/(admin)/(app)/(pages)/licences'));
 
 // add page
 
@@ -16,7 +16,9 @@ const AddRegion = lazy(() => import('@/app/(admin)/(app)/(pages)/regions/add-new
 const AddDirectorate = lazy(() => import('@/app/(admin)/(app)/(pages)/directorates/add-new'));
 const AddDistrict = lazy(() => import('@/app/(admin)/(app)/(pages)/district/add-new'));
 const AddCluster = lazy(() => import('@/app/(admin)/(app)/(pages)/cluster/add-new'));
-const AddSchool = lazy(() => import('@/app/(admin)/(app)/(hr)/create-leave'));
+const AddSchool = lazy(() => import('@/app/(admin)/(app)/(pages)/schools/add-new'));
+const AddYear = lazy(() => import('@/app/(admin)/(app)/(pages)/years/add-new'));
+const AddLicence = lazy(() => import('@/app/(admin)/(app)/(pages)/licences/add-new'));
 
 // admin invoice
 
@@ -83,7 +85,7 @@ export const layoutsRoutes = [
   { path: '/admin/dashboard', name: 'DashboardA', element: <Admin />,
     roles: [ROLES.SUPER_ADMIN] },
   { path: '/school/dashboard', name: 'DashboardSc', element: <School />,
-    roles: [ROLES.SCHOOL] },
+    roles: [ROLES.SCHOOL_ADMIN] },
   { path: '/student/dashboard', name: 'DashboardSt', element: <Student />,
     roles: [ROLES.STUDENT]},
   { path: '/teacher/dashboard', name: 'DashboardT', element: <Teacher />,
@@ -93,13 +95,16 @@ export const layoutsRoutes = [
   { path: '/admin/directorates', name: 'Directorates', element: <Directorate /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/districts', name: 'Districts', element: <District /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/clusters', name: 'Cluster', element: <Cluster /> ,roles: [ROLES.SUPER_ADMIN]},
-  { path: '/admin/years', name: 'Years', element: <Years /> ,roles: [ROLES.SUPER_ADMIN]},
-  { path: '/admin/licences', name: 'Licences', element: <Licences /> ,roles: [ROLES.SUPER_ADMIN]},
+  { path: '/admin/years', name: 'Years', element: <Years /> ,roles: [ROLES.SUPER_ADMIN,ROLES.SCHOOL_ADMIN]},
+  { path: '/admin/licences', name: 'Licences', element: <Licences /> ,roles: [ROLES.SUPER_ADMIN,ROLES.SCHOOL_ADMIN]},
 
   { path: '/admin/regions/create', name: 'AddRegion', element: <AddRegion /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/directorates/create', name: 'AddDirectorate', element: <AddDirectorate /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/districts/create', name: 'AddDistrict', element: <AddDistrict /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/clusters/create', name: 'AddCluster', element: <AddCluster /> ,roles: [ROLES.SUPER_ADMIN]},
+  { path: '/admin/schools/create', name: 'AddSchool', element: <AddSchool /> ,roles: [ROLES.SUPER_ADMIN]},
+  { path: '/admin/years/create', name: 'AddYear', element: <AddYear /> ,roles: [ROLES.SUPER_ADMIN]},
+  { path: '/admin/licences/create', name: 'AddLicence', element: <AddLicence /> ,roles: [ROLES.SUPER_ADMIN]},
 
 
   { path: '/add-new', name: 'InvoiceAddNew', element: <InvoiceAddNew /> },

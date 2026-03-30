@@ -30,43 +30,22 @@ export type MenuItemType = {
   roles?: string[]; 
 };
 
+
 export const menuItemsData: MenuItemType[] = [
   {
     key: 'Overview',
     label: 'Overview',
     isTitle: true,
+    roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
   },
   {
     key: 'Dashboards',
     label: 'Dashboards',
     icon: LuMonitorDot,
-    href: '/admin/dashboard',
-    roles: [ROLES.SUPER_ADMIN],
+    href: '/dashboard',
+    roles: [ROLES.SUPER_ADMIN,ROLES.SCHOOL_ADMIN,ROLES.TEACHER,ROLES.STUDENT],
   },
 
-  // {
-  //   key: 'SchoolDashboard',
-  //   label: 'Dashboardschool',
-  //   icon: LuMonitorDot,
-  //   href: '/school/dashboard',
-  //   roles: [ROLES.SCHOOL],
-  // },
-
-  // {
-  //   key: 'TeacherDashboard',
-  //   label: 'Dashboard',
-  //   icon: LuMonitorDot,
-  //   href: '/teacher/dashboard',
-  //   roles: [ROLES.TEACHER],
-  // },
-
-  // {
-  //   key: 'StudentDashboard',
-  //   label: 'Dashboard',
-  //   icon: LuMonitorDot,
-  //   href: '/student/dashboard',
-  //   roles: [ROLES.STUDENT],
-  // },
   {
     key: 'Pages',
     label: 'Pages',
@@ -77,94 +56,111 @@ export const menuItemsData: MenuItemType[] = [
     key: 'Regions',
     label: 'Regions',
     icon: FaGlobeAfrica,
-    href: '/admin/regions',
+    href: '/regions',
     roles: [ROLES.SUPER_ADMIN],
   },
   {
     key: 'Directorates',
     label: 'Directorates',
     icon: LuNewspaper  ,
-    href: '/admin/directorates',
+    href: '/directorates',
+    roles: [ROLES.SUPER_ADMIN],
   },
   {
     key: 'Districts',
     label: 'Districts',
     icon: LuRotate3D ,
-    href: '/admin/districts',
+    href: '/districts',
+    roles: [ROLES.SUPER_ADMIN],
   },
   {
     key: 'Clusters',
     label: 'Clusters',
     icon: LuShare2,
-    href: '/admin/clusters',
+    href: '/clusters',
+    roles: [ROLES.SUPER_ADMIN],
   },
   {
     key: 'Years',
     label: 'Years',
     icon: LuAlbum,
-    href: '/chat',
+    href: '/years',
+    roles: [ROLES.SUPER_ADMIN],
+  },
+  {
+    key: 'Academics',
+    label: 'Academics',
+    isTitle: true,
+    roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN, ROLES.TEACHER, ROLES.STUDENT],
   },
   {
     key: 'Schools',
     label: 'Schools',
-    icon: LuSchool ,
+    icon: LuSchool,
+    roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
     children: [
-      { key: 'AddSchool', label: 'Add School', href: '/add-school' },
-      { key: 'Schools List', label: 'Schools List', href: '/schools-list' },
+      { key: 'AddSchool', label: 'Add School', href: 'admin/school/add-new',roles: [ROLES.SUPER_ADMIN], },
+      { key: 'Schools List', label: 'School List', href: 'admin/school/list',roles: [ROLES.SUPER_ADMIN], },
     ],
   },
   {
     key: 'Licenses',
     label: 'Licenses',
-    icon: LuScrollText  ,
+    icon: LuScrollText,
+    roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
     children: [
-      { key: 'AddLicense', label: 'Add License', href: '/add-license' },
-      { key: 'Licenses List', label: 'Licenses List', href: '/licenses-list' },
+      { key: 'AddLicense', label: 'Add License', href: '/add-license',roles: [ROLES.SUPER_ADMIN], },
+      { key: 'Licenses List', label: 'Licenses List', href: '/licenses-list',roles: [ROLES.SUPER_ADMIN], },
     ],
   },
   {
     key: 'Grades',
     label: 'Grades',
     icon: LuShoppingBag,
+    roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
     children: [
-      { key: 'AddGrade', label: 'Add Grade', href: '/add-grade' },
-      { key: 'Grades List', label: 'Grades List', href: '/grades-list' },
+      { key: 'AddGrade', label: 'Add Grade', href: '/add-grade',roles: [ROLES.SUPER_ADMIN], },
+      { key: 'Grades List', label: 'Grades List', href: '/grades-list',roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN], },
     ],
   },
   {
     key: 'Classes',
     label: 'Classes',
     icon: SiGoogleclassroom,
+    roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
     children: [
-      { key: 'AddClass', label: 'Add Class', href: '/add-class' },
-      { key: 'Classes List', label: 'Classes List', href: '/classes-list' },
+      { key: 'AddClass', label: 'Add Class', href: '/add-class',roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN], },
+      { key: 'Classes List', label: 'Classes List', href: '/classes-list',roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN], },
     ],
   },
   {
     key: 'Students',
     label: 'Students',
     icon: PiStudentFill,
+    roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
     children: [
-      { key: 'AddStudent', label: 'Add Student', href: '/add-student' },
-      { key: 'Students List', label: 'Students List', href: '/students-list' },
+      { key: 'AddStudent', label: 'Add Student', href: '/add-student',roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN], },
+      { key: 'Students List', label: 'Students List', href: '/students-list',roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN], },
     ],
   },
   {
     key: 'Staff',
     label: 'Staff',
     icon: GiTeacher,
+    roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
     children: [
-      { key: 'AddStaff', label: 'Add Staff', href: '/add-staff' },
-      { key: 'Staff List', label: 'Staff List', href: '/staff-list' },
+      { key: 'AddStaff', label: 'Add Staff', href: '/add-staff',roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN], },
+      { key: 'Staff List', label: 'Staff List', href: '/staff-list',roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN], },
     ],
   },
   {
     key: 'Users',
     label: 'Users',
     icon: LuSquareUserRound,
+    roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
     children: [
-      { key: 'List View', label: 'List View', href: '/users-list' },
-      { key: 'Grid View', label: 'Grid View', href: '/users-grid' },
+      { key: 'List View', label: 'List View', href: '/users-list',roles: [ROLES.SUPER_ADMIN], },
+      { key: 'Grid View', label: 'Grid View', href: '/users-grid',roles: [ROLES.SUPER_ADMIN], },
     ],
   }
 ];
