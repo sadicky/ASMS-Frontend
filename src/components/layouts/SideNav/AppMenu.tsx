@@ -6,11 +6,19 @@ import { filterMenuByRole } from '@/utils/menuFilter';
 import { useEffect, useState } from 'react';
 
 // Vérifie si un item ou ses enfants sont actifs
-const isItemActive = (item: MenuItemType, pathname: string): boolean => {
-  if (item.href && pathname === pathname) return true;
+const isItemActive = (
+  item: MenuItemType,
+  pathname: string,
+  basePath: string
+): boolean => {
+  if (item.href && pathname === `${basePath}${item.href}`) return true;
+
   if (item.children) {
-    return item.children.some(child => isItemActive(child, pathname));
+    return item.children.some(child =>
+      isItemActive(child, pathname, basePath)
+    );
   }
+
   return false;
 };
 
@@ -23,11 +31,21 @@ const MenuItemWithChildren = ({ item, basePath }: { item: MenuItemType; basePath
   const [isOpen, setIsOpen] = useState(false);
 
   // 🔹 ouvrir automatiquement si un enfant est actif
-  useEffect(() => {
-    if (item.children?.some(child => `${basePath}${child.href}` === pathname)) {
-      setIsOpen(true);
-    }
-  }, [pathname, item.children, basePath]);
+  const isItemActive = (
+  item: MenuItemType,
+  pathname: string,
+  basePath: string
+): boolean => {
+  if (item.href && pathname === `${basePath}${item.href}`) return true;
+
+  if (item.children) {
+    return item.children.some(child =>
+      isItemActive(child, pathname, basePath)
+    );
+  }
+
+  return false;
+};
 
   const toggleMenu = () => setIsOpen(prev => !prev);
 

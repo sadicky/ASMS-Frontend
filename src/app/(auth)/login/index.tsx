@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from '@/services/auth.service'
-import SpainFlag from '@/assets/images/flags/spain.jpg';
-import UsFlag from '@/assets/images/flags/us.jpg';
+import { login } from '@/services/auth.service';
 import modern from '@/assets/images/modern.svg';
 import IconifyIcon from '@/components/client-wrapper/IconifyIcon';
 import PageMeta from '@/components/PageMeta';

@@ -28,7 +28,7 @@ const AddDistrict = () => {
   const [directorateId, setDirectorateId] = useState("");
 
   const [regions, setRegions] = useState<Region[]>([]);
-  const [directorates, setDirectorates] = useState<any[]>([]);
+  const [directorates, setDirectorates] = useState<Directorate[]>([]);
   // const [directorates, setDirectorates] = useState<Directorate[]>([]);useState<any[]>([]);
 
   const [loading, setLoading] = useState(false);
@@ -37,7 +37,7 @@ const AddDistrict = () => {
   useEffect(() => {
     const fetchRegions = async () => {
       try {
-        const data = await getRegions();
+        const data = await getRegions({ page: 1, limit: 100 });
         setRegions(data);
       } catch {
         toast.error("Error chargement regions");
@@ -59,7 +59,7 @@ const AddDistrict = () => {
       try {
         const data = await getDirectoratesByRegion(regionId);
         setDirectorates(data);
-        console.log("DIRECTORATES API:", data);
+        // console.log("DIRECTORATES API:", data);
       } catch {
         toast.error("Error chargement directorates");
       }

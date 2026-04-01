@@ -1,18 +1,24 @@
-import dashboardImg from '@/assets/images/dashboard.png';
+import dashboardImg from '@/assets/images/boxed.png';
 import { appName } from '@/helpers/constants';
 
+import { useNavigate } from 'react-router-dom';
 const WelcomeUser = () => {
+
+      const navigate = useNavigate();
   return (
     <div className="card-body relative overflow-hidden bg-zinc-900 rounded-md mb-5">
       <div className="relative z-10 grid grid-cols-12 items-center">
         <div className="lg:col-span-8 col-span-12">
-          <h5 className="mb-3 text-lg text-white">Welcome to {appName} 🎉</h5>
+          <h5 className="mb-3 text-lg text-white">Empowering Gambian Schools through Digital Excellence 🎉</h5>
           <p className="mb-5 text-white/70 text-sm">
-            A school dashboard has just that purpose. It provides your ecommerce team with a
-            clear overview of key financial and website KPIs at any time.
+            <p>
+              {appName} is a cloud-based, all-in-one School Management System (SMS) tailored to the unique educational landscape
+              of The Gambia. From the bustling streets of Serekunda to the riverside communities of the Upper River 
+              Region, our platform bridges the digital divide, ensuring every school has the tools to thrive in the 2020s.
+            </p>
           </p>
-          <button type="button" className="btn bg-primary text-white">
-            Take a Product
+          <button onClick={() => navigate("/admin/directorates/create")} className="btn bg-primary text-white">
+            Create a School
           </button>
         </div>
 
