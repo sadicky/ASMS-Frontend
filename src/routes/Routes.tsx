@@ -11,7 +11,6 @@ const Years = lazy(() => import('@/app/(admin)/(app)/(pages)/years'));
 const Licences = lazy(() => import('@/app/(admin)/(app)/(pages)/licences'));
 
 // add page
-
 const AddRegion = lazy(() => import('@/app/(admin)/(app)/(pages)/regions/add-new'));
 const AddDirectorate = lazy(() => import('@/app/(admin)/(app)/(pages)/directorates/add-new'));
 const AddDistrict = lazy(() => import('@/app/(admin)/(app)/(pages)/district/add-new'));
@@ -19,12 +18,11 @@ const AddCluster = lazy(() => import('@/app/(admin)/(app)/(pages)/cluster/add-ne
 const AddSchool = lazy(() => import('@/app/(admin)/(app)/(pages)/schools/add-new'));
 const AddYear = lazy(() => import('@/app/(admin)/(app)/(pages)/years/add-new'));
 const AddLicence = lazy(() => import('@/app/(admin)/(app)/(pages)/licences/add-new'));
+const SchoolAddNew = lazy(() => import('@/app/(admin)/(app)/(pages)/schools/add-new'));
 
-// admin invoice
-
-const InvoiceAddNew = lazy(() => import('@/app/(admin)/(app)/(invoice)/add-new'));
-const InvoiceList = lazy(() => import('@/app/(admin)/(app)/(invoice)/list'));
-const InvoiceOverview = lazy(() => import('@/app/(admin)/(app)/(invoice)/overview'));
+// LIST VIEWS
+const SchoolList = lazy(() => import('@/app/(admin)/(app)/(pages)/schools'));
+// const SchoolOverview = lazy(() => import('@/app/(admin)/(app)/(pages)/schools/overview'));
 
 // USers
 
@@ -107,9 +105,9 @@ export const layoutsRoutes = [
   { path: '/admin/licences/create', name: 'AddLicence', element: <AddLicence /> ,roles: [ROLES.SUPER_ADMIN]},
 
 
-  { path: '/add-new', name: 'InvoiceAddNew', element: <InvoiceAddNew /> },
-  { path: '/list', name: 'InvoiceList', element: <InvoiceList /> },
-  { path: '/overview', name: 'InvoiceOverview', element: <InvoiceOverview /> },
+  { path: '/admin/school/add-new', name: 'SchoolAddNew', element: <SchoolAddNew />,roles: [ROLES.SUPER_ADMIN] },
+  { path: '/admin/school/list', name: 'SchoolList', element: <SchoolList />,roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN] },
+  // { path: '/admin/schools/overview', name: 'SchoolOverview', element: <SchoolOverview /> },
 
   { path: '/users-grid', name: 'UserGrid', element: <UserGrid /> },
   { path: '/users-list', name: 'UserList', element: <UserList /> },

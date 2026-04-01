@@ -1,14 +1,14 @@
 import PageBreadcrumb from '@/components/PageBreadcrumb';
-import DirListTabel from './components/ClusterListTabel';
+import SchoolListTabel from './components/SchoolListTabel';
 import PageMeta from '@/components/PageMeta';
 
 const Index = () => {
   return (
     <>
-      <PageMeta title="Clusters View" />
+      <PageMeta title="Schools View" />
       <main>
-        <PageBreadcrumb subtitle="Clusters" title="List view" />
-        <DirListTabel />
+        <PageBreadcrumb subtitle="Schools" title="List view" />
+        <SchoolListTabel />
       </main>
     </>
   );

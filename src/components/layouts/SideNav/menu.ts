@@ -99,8 +99,8 @@ export const menuItemsData: MenuItemType[] = [
     icon: LuSchool,
     roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
     children: [
-      { key: 'AddSchool', label: 'Add School', href: 'admin/school/add-new',roles: [ROLES.SUPER_ADMIN], },
-      { key: 'Schools List', label: 'School List', href: 'admin/school/list',roles: [ROLES.SUPER_ADMIN], },
+      { key: 'AddSchool', label: 'Add School', href: '/school/add-new',roles: [ROLES.SUPER_ADMIN], },
+      { key: 'Schools List', label: 'School List', href: '/school/list',roles: [ROLES.SUPER_ADMIN], },
     ],
   },
   {
