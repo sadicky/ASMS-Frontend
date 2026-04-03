@@ -1,93 +1,116 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getRegions } from "@/services/region.service";
-import { getDirectoratesByRegion } from "@/services/dir.service";
-import { createCluster } from "@/services/cluster.service";
-import { getDistrictsByDirectorate } from "@/services/district.service";
+import { getDirectorates } from "@/services/dir.service";
+import { getDistricts } from "@/services/district.service";
+import { getClusters } from "@/services/cluster.service";
+import { createSchool } from "@/services/school.service";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import toast from "react-hot-toast";
+import { LuLoader, LuRefreshCcw, LuSave } from "react-icons/lu";
 
-import { LuLoader, LuRefreshCcw, LuSave } from 'react-icons/lu';
-
-type Region = { id: string; name: string };
-type Directorate = { id: string; name: string };
-type District = { id: string; name: string };
-
-
-const AddCluster = () => {
+const AddSchool = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const [name, setName] = useState("");
+  // 🔹 Data lists
+  const [regions, setRegions] = useState<any[]>([]);
+  const [directorates, setDirectorates] = useState<any[]>([]);
+  const [districts, setDistricts] = useState<any[]>([]);
+  const [clusters, setClusters] = useState<any[]>([]);
 
+  // 🔹 Selected IDs
   const [regionId, setRegionId] = useState("");
   const [directorateId, setDirectorateId] = useState("");
   const [districtId, setDistrictId] = useState("");
+  const [clusterId, setClusterId] = useState("");
 
-  const [regions, setRegions] = useState<Region[]>([]);
-  const [directorates, setDirectorates] = useState<Directorate[]>([]);
-  const [districts, setDistricts] = useState<District[]>([]);
+  // 🔹 Form
+  const [form, setForm] = useState({
+    name: "",
+    type: "",
+    category: "",
+    accredited: false,
+  });
 
-  const [loading, setLoading] = useState(false);
-
-  // 🔥 LOAD REGIONS
+  // ✅ LOAD REGIONS
   useEffect(() => {
-    getRegions({ page: 1, limit: 100 })
-        .then((res) => {
-        setRegions(res.data); // ✅ seulement le tableau
-      })
-      .catch(() => toast.error("Region chargement error"));
+    getRegions({})
+      .then((res) => setRegions(res.data || res))
+      .catch(() => toast.error("Failed to load regions"));
   }, []);
 
-  // 🔥 LOAD DIRECTORATES 
+  // ✅ LOAD DIRECTORATES
   useEffect(() => {
-    if (!regionId) {
-      setDirectorates([]);
-      setDistricts([]);
-      setDirectorateId("");
-      setDistrictId("");
-      return;
-    }
-    getDirectoratesByRegion(regionId)
-      .then(setDirectorates)
-      .catch(() => toast.error("Directorates Loading Error"));
+    if (!regionId) return;
+
+    getDirectorates({ regionId })
+      .then((res) => setDirectorates(res.data))
+      .catch(() => toast.error("Failed to load directorates"));
   }, [regionId]);
 
-  // 🔥 LOAD DISTRICTS
+  // ✅ LOAD DISTRICTS
   useEffect(() => {
-    if (!directorateId) {
-      setDistricts([]);
-      setDistrictId("");
-      return;
-    }
-    getDistrictsByDirectorate(directorateId)
-      .then(setDistricts)
-      .catch(() => toast.error("Districts Loading Error"));
+    if (!directorateId) return;
+
+    getDistricts({ directorateId })
+      .then((res) => setDistricts(res.data))
+      .catch(() => toast.error("Failed to load districts"));
   }, [directorateId]);
 
-  // 🔥 SUBMIT
-  const handleSubmit = async (e: React.FormEvent) => {
+  // ✅ LOAD CLUSTERS
+  useEffect(() => {
+    if (!districtId) return;
+
+    getClusters({ districtId })
+      .then((res) => setClusters(res.data))
+      .catch(() => toast.error("Failed to load clusters"));
+  }, [districtId]);
+
+  // 🔥 RESET CASCADE (ULTRA IMPORTANT)
+  useEffect(() => {
+    setDirectorateId("");
+    setDistrictId("");
+    setClusterId("");
+    setDirectorates([]);
+    setDistricts([]);
+    setClusters([]);
+  }, [regionId]);
+
+  useEffect(() => {
+    setDistrictId("");
+    setClusterId("");
+    setDistricts([]);
+    setClusters([]);
+  }, [directorateId]);
+
+  useEffect(() => {
+    setClusterId("");
+    setClusters([]);
+  }, [districtId]);
+
+  // ✅ SUBMIT
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    if (!name || !districtId) {
-      toast.error("All fields are required");
-      return;
-    }
-
-    setLoading(true);
     try {
-      await createCluster({ name, districtId });
+      setLoading(true);
 
-      toast.success("Cluster created successfully 🚀");
+      const res = await createSchool({
+        ...form,
+        clusterId,
+      });
 
-      setTimeout(() => {
-        navigate("/admin/clusters");
-      }, 1000);
+      toast.success("School created successfully 🚀");
 
+      // 🔥 REDIRECTION VERS LICENCE
+      navigate(`/admin/licenses/create?schoolId=${res.id}`);
+      
     } catch (err: any) {
       toast.error(
-        err.response?.data?.message || "Error creating cluster"
+        err.response?.data?.message || "Error creating school"
       );
     } finally {
       setLoading(false);
@@ -95,122 +118,138 @@ const AddCluster = () => {
   };
 
   return (
-    <>
-      <div className="card">
-        <div className="card-body">
-          <form onSubmit={handleSubmit}>
-            <div className="grid lg:grid-cols-4 grid-cols-1 gap-5 mb-6">
-              {/* NAME */}
-              <div className="col-span-1">
-                <label
-                  htmlFor="nameInput"
-                  className="inline-block mb-2 text-sm text-default-800 font-medium"
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="enter region name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
+    <div className="card">
+      <div className="card-body">
+        <form onSubmit={handleSubmit}>
+          
+          {/* NAME + CATEGORY */}
+          <div className="grid lg:grid-cols-3 gap-5 mb-6">
+            <input
+              placeholder="School Name"
+              className="form-input"
+              value={form.name}
+              onChange={(e) =>
+                setForm({ ...form, name: e.target.value })
+              }
+              required
+            />
+             <select
+              className="form-input"
+              value={form.category}
+              onChange={(e) => setForm({ ...form, category: e.target.value })}
+            >
+              <option value="">Select Category</option>
+              <option value="Secondary">Secondary</option>
+              <option value="Primary">Primary</option>
+            </select>
+            
+             <select
+              className="form-input"
+              value={form.type}
+              onChange={(e) => setForm({ ...form, type: e.target.value })}
+            >
+              <option value="">Select Type</option>
+              <option value="PUBLIC">PUBLIC</option>
+              <option value="PRIVATE">PRIVATE</option>
+              <option value="COMMUNITY">COMMUNITY</option>
+            </select>
+          </div>
 
-              {/* REGION */}
-              <div className="col-span-1">
-                <label
-                  htmlFor="regionInput"
-                  className="inline-block mb-2 text-sm text-default-800 font-medium"
-                >
-                  Region
-                </label>
-                <select
-                  className="form-input"
-                  value={regionId}
-                  onChange={(e) => setRegionId(e.target.value)}
-                >
-                  <option value="">Select Region</option>
-                  {regions.map((region) => (
-                    <option key={region.id} value={region.id}>
-                      {region.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+          {/* CASCADE SELECT */}
+          <div className="grid lg:grid-cols-4 gap-5 mb-6">
+            
+            <select
+              className="form-input"
+              value={regionId}
+              onChange={(e) => setRegionId(e.target.value)}
+            >
+              <option value="">Select Region</option>
+              {regions.map((r) => (
+                <option key={r.id} value={r.id}>{r.name}</option>
+              ))}
+            </select>
 
-              {/* DIRECTORATE */}
-              <div className="col-span-1">
-                <label
-                  htmlFor="regionInput"
-                  className="inline-block mb-2 text-sm text-default-800 font-medium"
-                >
-                  Directorate
-                </label>
-                <select
-                  className="form-input"
-                  value={directorateId}
-                  onChange={(e) => setDirectorateId(e.target.value)}
-                  disabled={!regionId}
-                >
-                  <option value="">Select Directorate</option>
-                  {directorates?.map((directorate) => (
-                    <option key={directorate.id} value={directorate.id}>
-                      {directorate.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <select
+              className="form-input"
+              value={directorateId}
+              onChange={(e) => setDirectorateId(e.target.value)}
+              disabled={!regionId}
+            >
+              <option value="">Select Directorate</option>
+              {directorates.map((d) => (
+                <option key={d.id} value={d.id}>{d.name}</option>
+              ))}
+            </select>
 
+            <select
+              className="form-input"
+              value={districtId}
+              onChange={(e) => setDistrictId(e.target.value)}
+              disabled={!directorateId}
+            >
+              <option value="">Select District</option>
+              {districts.map((d) => (
+                <option key={d.id} value={d.id}>{d.name}</option>
+              ))}
+            </select>
 
-              {/* DISTRICT */}
-              <div className="col-span-1">
-                <label
-                  htmlFor="regionInput"
-                  className="inline-block mb-2 text-sm text-default-800 font-medium"
-                >
-                  District
-                </label>
-                <select
-                  className="form-input"
-                  value={districtId}
-                  onChange={(e) => setDistrictId(e.target.value)}
-                  disabled={!directorateId}
-                >
-                  <option value="">Select District</option>
-                  {districts?.map((district) => (
-                    <option key={district.id} value={district.id}>
-                      {district.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <select
+              className="form-input"
+              value={clusterId}
+              onChange={(e) => setClusterId(e.target.value)}
+              disabled={!districtId}
+            >
+              <option value="">Select Cluster</option>
+              {clusters.map((c) => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
 
-            </div>
+          </div>
 
-            <div className="flex justify-end items-center mt-5">
-              <div className="flex flex-wrap items-center gap-2">
-                <button type="button"
-                  onClick={() => navigate("/admin/clusters")} className="bg-default-200 text-default-500 text-nowrap border-0 btn hover:bg-default-300">
-                  {' '}
-                  <LuRefreshCcw className="size-4 me-1" />
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="text-white border-0 btn text-nowrap bg-primary">
-                  {' '}
-                  <LuSave className="size-4 me-1" />
-                  {loading ? <LuLoader className="animate-spin" /> : "Create"}
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
+          {/* CHECKBOX */}
+          <div className="mb-6">
+            <label>
+              <input
+                type="checkbox"
+                className="form-checkbox"
+                checked={form.accredited}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    accredited: e.target.checked,
+                  })
+                }
+              />
+              Accredited &nbsp; &nbsp; &nbsp; 
+              {/* (if checked, the school will be marked as accredited) */}
+            </label>
+          </div>
+
+          {/* BUTTONS */}
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => navigate("/admin/school/list")}
+              className="btn bg-gray-200"
+            >
+              <LuRefreshCcw /> Cancel
+            </button>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn bg-primary text-white"
+            >
+              {loading ? <LuLoader className="animate-spin" /> : <LuSave />}
+              Create
+            </button>
+          </div>
+
+        </form>
       </div>
-    </>
+    </div>
   );
 };
 
-export default AddCluster;
+export default AddSchool;

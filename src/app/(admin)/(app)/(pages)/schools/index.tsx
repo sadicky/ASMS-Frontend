@@ -5,9 +5,9 @@ import PageMeta from '@/components/PageMeta';
 const Index = () => {
   return (
     <>
-      <PageMeta title="Schools View" />
+      <PageMeta title="School View" />
       <main>
-        <PageBreadcrumb subtitle="Schools" title="List view" />
+        <PageBreadcrumb subtitle="School" title="List view" />
         <SchoolListTabel />
       </main>
     </>

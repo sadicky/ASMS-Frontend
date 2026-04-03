@@ -18,11 +18,11 @@ const AddCluster = lazy(() => import('@/app/(admin)/(app)/(pages)/cluster/add-ne
 const AddSchool = lazy(() => import('@/app/(admin)/(app)/(pages)/schools/add-new'));
 const AddYear = lazy(() => import('@/app/(admin)/(app)/(pages)/years/add-new'));
 const AddLicence = lazy(() => import('@/app/(admin)/(app)/(pages)/licences/add-new'));
-const SchoolAddNew = lazy(() => import('@/app/(admin)/(app)/(pages)/schools/add-new'));
 
 // LIST VIEWS
 const SchoolList = lazy(() => import('@/app/(admin)/(app)/(pages)/schools'));
-// const SchoolOverview = lazy(() => import('@/app/(admin)/(app)/(pages)/schools/overview'));
+const LicencesList = lazy(() => import('@/app/(admin)/(app)/(pages)/licences'));
+const SchoolOverview = lazy(() => import('@/app/(admin)/(app)/(pages)/schools/overview'));
 
 // USers
 
@@ -100,15 +100,16 @@ export const layoutsRoutes = [
   { path: '/admin/directorates/create', name: 'AddDirectorate', element: <AddDirectorate /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/districts/create', name: 'AddDistrict', element: <AddDistrict /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/clusters/create', name: 'AddCluster', element: <AddCluster /> ,roles: [ROLES.SUPER_ADMIN]},
-  { path: '/admin/schools/create', name: 'AddSchool', element: <AddSchool /> ,roles: [ROLES.SUPER_ADMIN]},
+  { path: '/admin/school/create', name: 'AddSchool', element: <AddSchool /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/years/create', name: 'AddYear', element: <AddYear /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/licences/create', name: 'AddLicence', element: <AddLicence /> ,roles: [ROLES.SUPER_ADMIN]},
 
 
-  { path: '/admin/school/add-new', name: 'SchoolAddNew', element: <SchoolAddNew />,roles: [ROLES.SUPER_ADMIN] },
+  { path: '/admin/licences/list', name: 'LicencesList', element: <LicencesList /> ,roles: [ROLES.SUPER_ADMIN] },
   { path: '/admin/school/list', name: 'SchoolList', element: <SchoolList />,roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN] },
-  // { path: '/admin/schools/overview', name: 'SchoolOverview', element: <SchoolOverview /> },
+  { path: '/admin/school/:id', name: 'SchoolOverview', element: <SchoolOverview /> ,roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN]},
 
+  // <Route path="/admin/schools/:id" element={<ViewSchool />} />
   { path: '/users-grid', name: 'UserGrid', element: <UserGrid /> },
   { path: '/users-list', name: 'UserList', element: <UserList /> },
 

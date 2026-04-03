@@ -99,7 +99,7 @@ export const menuItemsData: MenuItemType[] = [
     icon: LuSchool,
     roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
     children: [
-      { key: 'AddSchool', label: 'Add School', href: '/school/add-new',roles: [ROLES.SUPER_ADMIN], },
+      { key: 'AddSchool', label: 'Add School', href: '/school/create',roles: [ROLES.SUPER_ADMIN], },
       { key: 'Schools List', label: 'School List', href: '/school/list',roles: [ROLES.SUPER_ADMIN], },
     ],
   },
@@ -109,8 +109,8 @@ export const menuItemsData: MenuItemType[] = [
     icon: LuScrollText,
     roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
     children: [
-      { key: 'AddLicense', label: 'Add License', href: '/add-license',roles: [ROLES.SUPER_ADMIN], },
-      { key: 'Licenses List', label: 'Licenses List', href: '/licenses-list',roles: [ROLES.SUPER_ADMIN], },
+      { key: 'AddLicense', label: 'Add License', href: '/licenses/create',roles: [ROLES.SUPER_ADMIN], },
+      { key: 'Licenses List', label: 'Licenses List', href: '/licences/list',roles: [ROLES.SUPER_ADMIN], },
     ],
   },
   {
