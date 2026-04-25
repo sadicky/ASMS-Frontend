@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { LuLoader, LuRefreshCcw, LuSave } from "react-icons/lu";
 
+import Select from 'react-select'
+
 const AddSchool = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -117,6 +119,38 @@ const AddSchool = () => {
     }
   };
 
+  // 🔹 OPTIONS
+  const regionOptions = regions.map((r) => ({
+    value: r.id,
+    label: r.name,
+  }));
+
+  const directorateOptions = directorates.map((d) => ({
+    value: d.id,
+    label: d.name,
+  }));
+
+  const districtOptions = districts.map((d) => ({
+    value: d.id,
+    label: d.name,
+  }));
+
+  const clusterOptions = clusters.map((c) => ({
+    value: c.id,
+    label: c.name,
+  }));
+
+const categoryOptions = [
+  { value: "Secondary", label: "Secondary" },
+  { value: "Primary", label: "Primary" },
+];
+
+const TypeOptions = [
+  { value: "PUBLIC", label: "PUBLIC" },
+  { value: "PRIVATE", label: "PRIVATE" },
+  { value: "COMMUNITY", label: "COMMUNITY" },
+];
+
   return (
     <div className="card">
       <div className="card-body">
@@ -133,32 +167,43 @@ const AddSchool = () => {
               }
               required
             />
-             <select
-              className="form-input"
-              value={form.category}
-              onChange={(e) => setForm({ ...form, category: e.target.value })}
-            >
-              <option value="">Select Category</option>
-              <option value="Secondary">Secondary</option>
-              <option value="Primary">Primary</option>
-            </select>
-            
-             <select
-              className="form-input"
-              value={form.type}
-              onChange={(e) => setForm({ ...form, type: e.target.value })}
-            >
-              <option value="">Select Type</option>
-              <option value="PUBLIC">PUBLIC</option>
-              <option value="PRIVATE">PRIVATE</option>
-              <option value="COMMUNITY">COMMUNITY</option>
-            </select>
+             <Select
+                options={categoryOptions}
+                placeholder="Select Category"
+                value={
+                  categoryOptions.find(
+                    (opt) => opt.value === form.category
+                  ) || null
+                }
+                onChange={(selected: any) =>
+                  setForm({
+                    ...form,
+                    category: selected?.value || "",
+                  })
+                }
+              />
+                        
+             <Select
+                options={TypeOptions}
+                placeholder="Select Type"
+                value={
+                  TypeOptions.find(
+                    (opt) => opt.value === form.type
+                  ) || null
+                }
+                onChange={(selected: any) =>
+                  setForm({
+                    ...form,
+                    type: selected?.value || "",
+                  })
+                }
+              />
           </div>
 
           {/* CASCADE SELECT */}
           <div className="grid lg:grid-cols-4 gap-5 mb-6">
             
-            <select
+            {/* <select
               className="form-input"
               value={regionId}
               onChange={(e) => setRegionId(e.target.value)}
@@ -167,9 +212,26 @@ const AddSchool = () => {
               {regions.map((r) => (
                 <option key={r.id} value={r.id}>{r.name}</option>
               ))}
-            </select>
+            </select> */}
+              <Select
+              options={regionOptions}
+              placeholder="Select Region"
+              value={regionOptions.find((o) => o.value === regionId) || null}
+              onChange={(selected: any) => {
+                setRegionId(selected?.value || "");
 
-            <select
+                // 🔥 RESET CASCADE
+                setDirectorateId("");
+                setDistrictId("");
+                setClusterId("");
+
+                setDirectorates([]);
+                setDistricts([]);
+                setClusters([]);
+              }}
+            />
+
+            {/* <select
               className="form-input"
               value={directorateId}
               onChange={(e) => setDirectorateId(e.target.value)}
@@ -179,9 +241,27 @@ const AddSchool = () => {
               {directorates.map((d) => (
                 <option key={d.id} value={d.id}>{d.name}</option>
               ))}
-            </select>
+            </select> */}
+              <Select
+              options={directorateOptions}
+              placeholder="Select Directorate"
+              isDisabled={!regionId}
+              value={
+                directorateOptions.find((o) => o.value === directorateId) || null
+              }
+              onChange={(selected: any) => {
+                setDirectorateId(selected?.value || "");
 
-            <select
+                // 🔥 RESET
+                setDistrictId("");
+                setClusterId("");
+
+                setDistricts([]);
+                setClusters([]);
+              }}
+              />
+
+            {/* <select
               className="form-input"
               value={districtId}
               onChange={(e) => setDistrictId(e.target.value)}
@@ -191,9 +271,23 @@ const AddSchool = () => {
               {districts.map((d) => (
                 <option key={d.id} value={d.id}>{d.name}</option>
               ))}
-            </select>
+            </select> */}
 
-            <select
+                <Select
+                options={districtOptions}
+                placeholder="Select District"
+                isDisabled={!directorateId}
+                value={districtOptions.find((o) => o.value === districtId) || null}
+                onChange={(selected: any) => {
+                  setDistrictId(selected?.value || "");
+
+                  // 🔥 RESET
+                  setClusterId("");
+                  setClusters([]);
+                }}
+              />
+
+            {/* <select
               className="form-input"
               value={clusterId}
               onChange={(e) => setClusterId(e.target.value)}
@@ -203,7 +297,16 @@ const AddSchool = () => {
               {clusters.map((c) => (
                 <option key={c.id} value={c.id}>{c.name}</option>
               ))}
-            </select>
+            </select> */}
+              <Select
+                options={clusterOptions}
+                placeholder="Select Cluster"
+                isDisabled={!districtId}
+                value={clusterOptions.find((o) => o.value === clusterId) || null}
+                onChange={(selected: any) => {
+                  setClusterId(selected?.value || "");
+                }}
+              />
 
           </div>
 

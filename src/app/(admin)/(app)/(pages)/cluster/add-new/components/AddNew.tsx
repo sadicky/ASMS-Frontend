@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 import { LuLoader, LuRefreshCcw, LuSave } from 'react-icons/lu';
+import Select from "react-select";
 
 type Region = { id: string; name: string };
 type Directorate = { id: string; name: string };
@@ -93,6 +94,21 @@ const AddCluster = () => {
       setLoading(false);
     }
   };
+    // 🔹 OPTIONS
+  const regionOptions = regions.map((r) => ({
+    value: r.id,
+    label: r.name,
+  }));
+
+  const directorateOptions = directorates.map((d) => ({
+    value: d.id,
+    label: d.name,
+  }));
+
+  const districtOptions = districts.map((d) => ({
+    value: d.id,
+    label: d.name,
+  }));
 
   return (
     <>
@@ -125,18 +141,21 @@ const AddCluster = () => {
                 >
                   Region
                 </label>
-                <select
-                  className="form-input"
-                  value={regionId}
-                  onChange={(e) => setRegionId(e.target.value)}
-                >
-                  <option value="">Select Region</option>
-                  {regions.map((region) => (
-                    <option key={region.id} value={region.id}>
-                      {region.name}
-                    </option>
-                  ))}
-                </select>
+               <Select
+              options={regionOptions}
+              placeholder="Select Region"
+              value={regionOptions.find((o) => o.value === regionId) || null}
+              onChange={(selected: any) => {
+                setRegionId(selected?.value || "");
+
+                // 🔥 RESET CASCADE
+                setDirectorateId("");
+                setDistrictId("");
+
+                setDirectorates([]);
+                setDistricts([]);
+              }}
+            />
               </div>
 
               {/* DIRECTORATE */}
@@ -147,19 +166,21 @@ const AddCluster = () => {
                 >
                   Directorate
                 </label>
-                <select
-                  className="form-input"
-                  value={directorateId}
-                  onChange={(e) => setDirectorateId(e.target.value)}
-                  disabled={!regionId}
-                >
-                  <option value="">Select Directorate</option>
-                  {directorates?.map((directorate) => (
-                    <option key={directorate.id} value={directorate.id}>
-                      {directorate.name}
-                    </option>
-                  ))}
-                </select>
+                      <Select
+              options={directorateOptions}
+              placeholder="Select Directorate"
+              isDisabled={!regionId}
+              value={
+                directorateOptions.find((o) => o.value === directorateId) || null
+              }
+              onChange={(selected: any) => {
+                setDirectorateId(selected?.value || "");
+
+                // 🔥 RESET
+                setDistrictId("");
+                setDistricts([]);
+              }}
+              />
               </div>
 
 
@@ -171,19 +192,15 @@ const AddCluster = () => {
                 >
                   District
                 </label>
-                <select
-                  className="form-input"
-                  value={districtId}
-                  onChange={(e) => setDistrictId(e.target.value)}
-                  disabled={!directorateId}
-                >
-                  <option value="">Select District</option>
-                  {districts?.map((district) => (
-                    <option key={district.id} value={district.id}>
-                      {district.name}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                options={districtOptions}
+                placeholder="Select District"
+                isDisabled={!directorateId}
+                value={districtOptions.find((o) => o.value === districtId) || null}
+                onChange={(selected: any) => {
+                  setDistrictId(selected?.value || "");
+                }}
+              />
               </div>
 
             </div>

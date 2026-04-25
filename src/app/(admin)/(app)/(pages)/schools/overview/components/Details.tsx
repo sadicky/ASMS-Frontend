@@ -40,8 +40,8 @@ const Details = () => {
     <>
       {/* HEADER */}
       <div className="flex justify-between items-center">
-        <span className="px-2.5 py-0.5 text-xs font-semibold rounded bg-primary/10 text-primary">
-          School Details
+        <span onClick={() => navigate("/admin/school/list")} className="btn px-2.5 py-0.5 text-xs font-semibold rounded bg-primary/10 text-primary">
+          All Schools
         </span>
 
         {/* ACTION MENU */}
@@ -133,7 +133,7 @@ const Details = () => {
         
         <button
           onClick={() =>
-            navigate(`/admin/licenses/create?schoolId=${school.id}`)
+            navigate(`/admin/licences/create?schoolId=${school.id}`)
           }
           className="p-4 border rounded hover:bg-gray-50"
         >
@@ -188,7 +188,7 @@ const Details = () => {
                 <th className="text-left py-2 text-gray-500">Start</th>
                 <td>
                   {new Date(
-                    school.licenses[0].startDate
+                    school.licenses[0].issuedAt
                   ).toLocaleDateString()}
                 </td>
               </tr>
@@ -196,7 +196,7 @@ const Details = () => {
                 <th className="text-left py-2 text-gray-500">End</th>
                 <td>
                   {new Date(
-                    school.licenses[0].endDate
+                    school.licenses[0].expiresAt
                   ).toLocaleDateString()}
                 </td>
               </tr>

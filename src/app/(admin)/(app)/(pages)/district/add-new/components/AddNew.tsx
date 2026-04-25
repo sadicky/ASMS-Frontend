@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getRegions } from "@/services/region.service";
 import { getDirectoratesByRegion } from "@/services/dir.service";
 import { createDistrict } from "@/services/district.service";
@@ -8,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 import { LuRefreshCcw, LuSave } from 'react-icons/lu';
+
+import Select from 'react-select'
 
 type Region = {
   id: string;
@@ -29,7 +32,6 @@ const AddDistrict = () => {
 
   const [regions, setRegions] = useState<Region[]>([]);
   const [directorates, setDirectorates] = useState<Directorate[]>([]);
-  // const [directorates, setDirectorates] = useState<Directorate[]>([]);useState<any[]>([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +40,7 @@ const AddDistrict = () => {
     const fetchRegions = async () => {
       try {
         const data = await getRegions({ page: 1, limit: 100 });
-        setRegions(data);
+        setRegions(data.data);
       } catch {
         toast.error("Error chargement regions");
       }
@@ -97,6 +99,17 @@ const AddDistrict = () => {
     }
   };
 
+  
+  // 🔹 OPTIONS
+  const regionOptions = regions.map((r) => ({
+    value: r.id,
+    label: r.name,
+  }));
+   const directorateOptions = directorates.map((d) => ({
+    value: d.id,
+    label: d.name,
+  }));
+
   return (
     <>
       <div className="card">
@@ -128,7 +141,7 @@ const AddDistrict = () => {
               >
                 Region
               </label>
-              <select
+              {/* <select
                 className="form-input"
               value={regionId}
               onChange={(e) => setRegionId(e.target.value)}
@@ -139,7 +152,15 @@ const AddDistrict = () => {
                     {region.name}
                   </option>
                 ))}
-              </select>
+              </select> */}
+                <Select
+                            options={regionOptions}
+                            placeholder="Select Region"
+                            value={regionOptions.find((o) => o.value === regionId) || null}
+                            onChange={(selected: any) => {
+                              setRegionId(selected?.value || "");
+                            }}
+                          />
               </div>
 
                 {/* DIRECTORATE */}
@@ -150,19 +171,17 @@ const AddDistrict = () => {
               >
                 Directorate
               </label>
-              <select
-                className="form-input"
-              value={directorateId}
-              onChange={(e) => setDirectorateId(e.target.value)}
-              disabled={!regionId}
-              >
-                <option value="">Select Directorate</option>
-                {directorates?.map((directorate) => (
-                  <option key={directorate.id} value={directorate.id}>
-                    {directorate.name}
-                  </option>
-                ))}
-              </select>
+              <Select
+              options={directorateOptions}
+              placeholder="Select Directorate"
+              isDisabled={!regionId}
+              value={
+                directorateOptions.find((o) => o.value === directorateId) || null
+              }
+              onChange={(selected: any) => {
+                setDirectorateId(selected?.value || "");
+              }}
+              />
               </div>
 
           </div>

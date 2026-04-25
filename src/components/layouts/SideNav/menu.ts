@@ -6,9 +6,6 @@ import {
   LuAlbum,
   LuSchool,
   LuScrollText,
-  LuShare2, 
-  LuRotate3D,
-  LuNewspaper
 } from 'react-icons/lu';
 import { GiTeacher } from "react-icons/gi";
 import { PiStudentFill } from "react-icons/pi";
@@ -53,32 +50,16 @@ export const menuItemsData: MenuItemType[] = [
     roles: [ROLES.SUPER_ADMIN],
   },
   {
-    key: 'Regions',
-    label: 'Regions',
+    key: 'Admin Hierarchy',
+    label: 'Hierarchy',
     icon: FaGlobeAfrica,
-    href: '/regions',
     roles: [ROLES.SUPER_ADMIN],
-  },
-  {
-    key: 'Directorates',
-    label: 'Directorates',
-    icon: LuNewspaper  ,
-    href: '/directorates',
-    roles: [ROLES.SUPER_ADMIN],
-  },
-  {
-    key: 'Districts',
-    label: 'Districts',
-    icon: LuRotate3D ,
-    href: '/districts',
-    roles: [ROLES.SUPER_ADMIN],
-  },
-  {
-    key: 'Clusters',
-    label: 'Clusters',
-    icon: LuShare2,
-    href: '/clusters',
-    roles: [ROLES.SUPER_ADMIN],
+    children: [ 
+      { key: 'Regions', label: 'Regions', href: '/regions',roles: [ROLES.SUPER_ADMIN], },
+      { key: 'Directorates', label: 'Directorates', href: '/directorates',roles: [ROLES.SUPER_ADMIN], },
+      { key: 'Districts', label: 'Districts', href: '/districts',roles: [ROLES.SUPER_ADMIN], }, 
+      { key: 'Clusters', label: 'Clusters', href: '/clusters',roles: [ROLES.SUPER_ADMIN], },
+    ],
   },
   {
     key: 'Years',
@@ -109,7 +90,6 @@ export const menuItemsData: MenuItemType[] = [
     icon: LuScrollText,
     roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
     children: [
-      { key: 'AddLicense', label: 'Add License', href: '/licenses/create',roles: [ROLES.SUPER_ADMIN], },
       { key: 'Licenses List', label: 'Licenses List', href: '/licences/list',roles: [ROLES.SUPER_ADMIN], },
     ],
   },
@@ -117,21 +97,15 @@ export const menuItemsData: MenuItemType[] = [
     key: 'Grades',
     label: 'Grades',
     icon: LuShoppingBag,
-    roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
-    children: [
-      { key: 'AddGrade', label: 'Add Grade', href: '/add-grade',roles: [ROLES.SUPER_ADMIN], },
-      { key: 'Grades List', label: 'Grades List', href: '/grades-list',roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN], },
-    ],
+    href: '/grades',
+    roles: [ROLES.SUPER_ADMIN],
   },
   {
     key: 'Classes',
     label: 'Classes',
     icon: SiGoogleclassroom,
     roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
-    children: [
-      { key: 'AddClass', label: 'Add Class', href: '/add-class',roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN], },
-      { key: 'Classes List', label: 'Classes List', href: '/classes-list',roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN], },
-    ],
+   href: '/classes',
   },
   {
     key: 'Students',
@@ -139,18 +113,18 @@ export const menuItemsData: MenuItemType[] = [
     icon: PiStudentFill,
     roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
     children: [
-      { key: 'AddStudent', label: 'Add Student', href: '/add-student',roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN], },
-      { key: 'Students List', label: 'Students List', href: '/students-list',roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN], },
+      { key: 'AddStudent', label: 'Enrollement', href: '/students/create',roles: [ROLES.SCHOOL_ADMIN], },
+      { key: 'Students List', label: 'Students List', href: '/students',roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN], },
     ],
   },
   {
     key: 'Staff',
     label: 'Staff',
     icon: GiTeacher,
-    roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
+    roles: [ROLES.SCHOOL_ADMIN],
     children: [
-      { key: 'AddStaff', label: 'Add Staff', href: '/add-staff',roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN], },
-      { key: 'Staff List', label: 'Staff List', href: '/staff-list',roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN], },
+      { key: 'AddStaff', label: 'Add Staff', href: '/staff/create',roles: [ROLES.SCHOOL_ADMIN], },
+      { key: 'Staff List', label: 'Staff List', href: '/staffs',roles: [ ROLES.SCHOOL_ADMIN], },
     ],
   },
   {

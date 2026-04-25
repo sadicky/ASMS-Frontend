@@ -17,7 +17,7 @@ const WelcomeUser = () => {
               Region, our platform bridges the digital divide, ensuring every school has the tools to thrive in the 2020s.
             </p>
           </p>
-          <button onClick={() => navigate("/admin/directorates/create")} className="btn bg-primary text-white">
+          <button onClick={() => navigate("/admin/school/create")} className="btn bg-primary text-white">
             Create a School
           </button>
         </div>

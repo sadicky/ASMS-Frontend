@@ -1,5 +1,4 @@
 import PageBreadcrumb from '@/components/PageBreadcrumb';
-import Product from './components/Product';
 import Details from './components/Details';
 import PageMeta from '@/components/PageMeta';
 

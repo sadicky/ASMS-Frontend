@@ -174,31 +174,6 @@ const Index = () => {
                           {loading ? 'Loading...' : 'Sign In'}
                         </button>
                       </div>
-
-                      <div className="my-3 relative text-center  before:absolute before:top-2.5 before:left-0 before:border-t before:border-t-default-200 before:w-full before:h-0.5 before:right-0 before:-z-0">
-                        <h4 className="relative z-1 py-0.5 px-2 inline-block font-medium bg-card text-default-500 rounded-md">
-                          Sign In with
-                        </h4>
-                      </div>
-
-                      <div className="flex w-full justify-center items-center gap-2">
-                        <Link
-                          to="#"
-                          className="btn border border-default-200 flex-grow hover:bg-default-150 shadow-sm hover:text-default-800"
-                        >
-                          <IconifyIcon icon={'logos:google-icon'} />
-                          Use Google
-                        </Link>
-
-                        <Link
-                          to="#"
-                          className="btn border border-default-200 flex-grow hover:bg-default-150 shadow-sm hover:text-default-800"
-                        >
-                          <IconifyIcon icon={'logos:apple'} className="text-mono" />
-                          Use Apple
-                        </Link>
-                      </div>
-
                     </form>
                   </div>
                 </div>

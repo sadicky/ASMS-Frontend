@@ -3,6 +3,7 @@ import { getRegions } from "@/services/region.service";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import Select from 'react-select'
 
 import { LuRefreshCcw, LuSave } from 'react-icons/lu';
 
@@ -64,6 +65,11 @@ const AddDirectorate = () => {
     }
   };
 
+  const regionOptions = regions.map((region) => ({
+  value: region.id,
+  label: region.name,
+}));
+
   return (
     <>
       <div className="card">
@@ -92,7 +98,7 @@ const AddDirectorate = () => {
               >
                 Region
               </label>
-              <select
+              {/* <select
                 className="form-input"
               value={regionId}
               onChange={(e) => setRegionId(e.target.value)}
@@ -103,7 +109,17 @@ const AddDirectorate = () => {
                     {region.name}
                   </option>
                 ))}
-              </select>
+              </select> */}
+              
+              <Select
+                options={regionOptions}
+                placeholder="Select a region"
+                value={regionOptions.find((opt) => opt.value === regionId) || null}
+                onChange={(selected: any) => {
+                  setRegionId(selected?.value || "");
+                }}
+                className="react-select-container"
+              />
               </div>
           </div>
 

@@ -13,9 +13,9 @@ import PageMeta from '@/components/PageMeta';
 const Index = () => {
   return (
     <>
-      <PageMeta title="HR" />
+      <PageMeta title="School Dashboard" />
       <main>
-        <PageBreadcrumb title="HR" subtitle="Dashboard" />
+        <PageBreadcrumb title="School" subtitle="Dashboard" />
         <Activities />
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-5 mb-5">
           <EmployeDetails />
