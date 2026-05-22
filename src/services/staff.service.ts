@@ -2,13 +2,9 @@
 import api from "@/lib/api";
 
 // 🔥 CREATE STAFF
-export const createStaff = async (data: any) => {
-  try {
-    const res = await api.post("/staff", data);
-    return res.data;
-  } catch (error: any) {
-    throw error.response?.data || "Error creating staff";
-  }
+export const createStaff = async (payload: any) => {
+  const { data } = await api.post("/staff/create", payload);
+  return data;
 };
 
 // 🔥 SCHOOL ADMIN - STAFF LIST (ARRAY DIRECT FROM BACKEND)

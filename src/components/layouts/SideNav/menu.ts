@@ -6,11 +6,17 @@ import {
   LuAlbum,
   LuSchool,
   LuScrollText,
+  LuCalendarClock,
+  LuView,
 } from 'react-icons/lu';
-import { GiTeacher } from "react-icons/gi";
-import { PiStudentFill } from "react-icons/pi";
+import { GiBookPile, GiTeacher } from "react-icons/gi";
+import { PiExam, PiStudentFill } from "react-icons/pi";
 import { FaGlobeAfrica } from "react-icons/fa";
 import { SiGoogleclassroom } from "react-icons/si";
+import { LuBookOpen } from "react-icons/lu";
+import { LuTableColumnsSplit } from "react-icons/lu";
+import { FaBook } from "react-icons/fa6";
+import { MdAssessment, MdMenuBook, MdPlayLesson } from "react-icons/md";
 import { ROLES } from "@/helpers/constants";
 
 export type MenuItemType = {
@@ -101,17 +107,80 @@ export const menuItemsData: MenuItemType[] = [
     roles: [ROLES.SUPER_ADMIN],
   },
   {
+    key: 'Streams',
+    label: 'Streams',
+    icon: LuBookOpen,
+    href: '/streams',
+   roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
+  },
+  {
     key: 'Classes',
     label: 'Classes',
     icon: SiGoogleclassroom,
-    roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
+    roles: [ROLES.SCHOOL_ADMIN],
    href: '/classes',
+  },
+  {
+    key: 'Subjects',
+    label: 'Subjects',
+    icon: MdMenuBook ,
+    roles: [ROLES.SCHOOL_ADMIN,ROLES.SUPER_ADMIN],
+   href: '/subjects',
+  },
+  {
+    key: 'Courses',
+    label: 'Courses',
+    icon: FaBook ,
+    roles: [ROLES.SCHOOL_ADMIN,ROLES.SUPER_ADMIN,ROLES.TEACHER],
+   href: '/courses',
+  },
+  {
+    key: 'Lessons',
+    label: 'Sessions',
+    icon: MdPlayLesson ,
+    roles: [ROLES.TEACHER,ROLES.SCHOOL_ADMIN],
+   href: '/lessons',
+  },
+  {
+    key: 'Timetable',
+    label: 'Timetable',
+    icon: LuTableColumnsSplit ,
+    roles: [ROLES.SCHOOL_ADMIN,ROLES.TEACHER],
+   href: '/timetables',
+  },
+  {
+    key: 'Attendances',
+    label: 'Attendances',
+    icon: LuCalendarClock ,
+    roles: [ROLES.SCHOOL_ADMIN,ROLES.TEACHER],
+   href: '/attendances',
+  },
+  {
+    key: 'Assessments',
+    label: 'Assessments',
+    icon: MdAssessment ,
+    roles: [ROLES.SCHOOL_ADMIN,ROLES.TEACHER],
+   href: '/assessments',
+  },
+  {
+    key: 'Exams',
+    label: 'Exams',
+    icon: PiExam ,
+    roles: [ROLES.SCHOOL_ADMIN,ROLES.TEACHER],
+   href: '/exams',
+  },
+  {
+    key: 'GradeBook',
+    label: 'GradeBook',
+    icon: GiBookPile ,
+    roles: [ROLES.SCHOOL_ADMIN,ROLES.TEACHER, ROLES.PARENT],
+   href: '/gradebooks',
   },
   {
     key: 'Students',
     label: 'Students',
     icon: PiStudentFill,
-    roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN],
+    roles: [ROLES.SCHOOL_ADMIN],
     children: [
       { key: 'AddStudent', label: 'Enrollement', href: '/students/create',roles: [ROLES.SCHOOL_ADMIN], },
       { key: 'Students List', label: 'Students List', href: '/students',roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN], },

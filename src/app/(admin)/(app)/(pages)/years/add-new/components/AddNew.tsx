@@ -1,44 +1,84 @@
-import { createYear } from "@/services/year.service";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+  createAcademicYear,
+} from "@/services/year.service";
 
-import { LuRefreshCcw, LuSave } from 'react-icons/lu';
-import { TbCircleFilled } from "react-icons/tb";
+interface Props {
+  onCreated?: () => void;
+}
 
-import toast from "react-hot-toast";
+const CreateAcademic = ({
+  onCreated,
+}: Props) => {
 
-const AddYear = () => {
-  const navigate = useNavigate();
+  const [name, setName] =
+    useState("");
 
-  const [name, setName] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [terms, setTerms] =
+    useState([
+      { name: "First Term" },
+      { name: "Second Term" },
+      { name: "Third Term" },
+    ]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const [loading, setLoading] =
+    useState(false);
+
+  const handleTermChange = (
+    index: number,
+    value: string
+  ) => {
+    const updated = [...terms];
+
+    updated[index].name = value;
+
+    setTerms(updated);
+  };
+
+  const addTerm = () => {
+    setTerms([
+      ...terms,
+      { name: "" },
+    ]);
+  };
+
+  const removeTerm = (index: number) => {
+    const updated = terms.filter(
+      (_, i) => i !== index
+    );
+
+    setTerms(updated);
+  };
+
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
     e.preventDefault();
 
-    if (!name.trim()) {
-        toast.error("Error chargement years");
-      return;
-    }
-     setLoading(true);
-    setError("");
-
     try {
-      await createYear(name);
+      setLoading(true);
 
-      // 🔥 afficher message succès
-      toast.success(`Year "${name}" created successfully !`);
+      await createAcademicYear({
+        name,
+        terms,
+      });
 
-      // 🔥 redirection après 1 seconde
-      setTimeout(() => {
-        navigate("/admin/years");
-      }, 3000);
+      setName("");
 
-    } catch (err: any) {
-      setError(
-        err.response?.data?.message ||
-        "Erreur lors de la création"
+      setTerms([
+        { name: "First Term" },
+        { name: "Second Term" },
+        { name: "Third Term" },
+      ]);
+
+      if (onCreated) {
+        onCreated();
+      }
+
+    } catch (error) {
+      console.error(
+        "Failed to create academic year",
+        error
       );
     } finally {
       setLoading(false);
@@ -46,57 +86,120 @@ const AddYear = () => {
   };
 
   return (
-    <>
-      <div className="card">
-        <div className="card-body">
-           {/* ❌ Error */}
-          {error && (
-          <div className="py-1 px-4 mb-4 external-event fc-event font-medium bg-danger/10 text-danger rounded" data-class="!text-danger">
-            <span><TbCircleFilled className="inline-block me-2" /> {error}.</span></div>
-        )}
+    <div className="card mb-5">
 
-          <form onSubmit={handleSubmit}>
-          <div className="grid lg:grid-cols-4 grid-cols-1 gap-5">
-            <div className="lg:col-span-4 col-span-1">
-              <label
-                htmlFor="nameInput"
-                className="inline-block mb-2 text-sm text-default-800 font-medium"
-              >
-                Name
-              </label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="enter region name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-end items-center mt-5">
-            <div className="flex flex-wrap items-center gap-2">
-              <button type="button"
-              onClick={() => navigate("/admin/years")} className="bg-default-200 text-default-500 text-nowrap border-0 btn hover:bg-default-300">
-                {' '}
-                <LuRefreshCcw className="size-4 me-1" />
-                Cancel
-              </button>
-              <button 
-              type="submit"
-              disabled={loading}
-              className="text-white border-0 btn text-nowrap bg-primary">
-                {' '}
-                <LuSave className="size-4 me-1" />
-                {loading ? "Creating..." : "Create"}
-              </button>
-            </div>
-          </div>
-          </form>
-        </div>
+      <div className="card-header">
+        <h4 className="card-title">
+          Create Academic Year
+        </h4>
       </div>
-    </>
+
+      <div className="card-body">
+
+        <form onSubmit={handleSubmit}>
+
+          {/* Academic Year */}
+
+          <div className="mb-5">
+
+            <label className="block mb-2 text-sm font-medium">
+              Academic Year Name
+            </label>
+
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Ex: 2025 - 2026"
+              value={name}
+              onChange={(e) =>
+                setName(e.target.value)
+              }
+              required
+            />
+
+          </div>
+
+          {/* TERMS */}
+
+          <div className="mb-5">
+
+            <div className="flex items-center justify-between mb-3">
+
+              <h5 className="font-semibold">
+                Terms
+              </h5>
+
+              <button
+                type="button"
+                onClick={addTerm}
+                className="btn btn-sm bg-primary text-white"
+              >
+                Add Term
+              </button>
+
+            </div>
+
+            <div className="space-y-3">
+
+              {terms.map((term, index) => (
+
+                <div
+                  key={index}
+                  className="flex gap-3"
+                >
+
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder={`Term ${
+                      index + 1
+                    }`}
+                    value={term.name}
+                    onChange={(e) =>
+                      handleTermChange(
+                        index,
+                        e.target.value
+                      )
+                    }
+                    required
+                  />
+
+                  {terms.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        removeTerm(index)
+                      }
+                      className="btn bg-danger text-white"
+                    >
+                      Remove
+                    </button>
+                  )}
+
+                </div>
+
+              ))}
+
+            </div>
+
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn bg-primary text-white"
+          >
+            {loading
+              ? "Creating..."
+              : "Create Academic Year"}
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
   );
 };
 
-export default AddYear;
+export default CreateAcademic;

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -15,8 +16,22 @@ import {
 
 import { Line, Bar } from "react-chartjs-2";
 
-import { getStudentById } from "@/services/student.service";
 import toast from "react-hot-toast";
+
+import {
+  LuLoader,
+  LuUser,
+  LuPhone,
+  LuMapPin,
+  LuGraduationCap,
+  LuCalendar,
+  LuMail,
+  LuUsers,
+} from "react-icons/lu";
+
+import {
+  getStudentById,
+} from "@/services/student.service";
 
 ChartJS.register(
   CategoryScale,
@@ -29,49 +44,112 @@ ChartJS.register(
 );
 
 const StudentDashboard = () => {
-  const { id } = useParams();
-  const [student, setStudent] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
 
+  const { id } = useParams();
+
+  const [student, setStudent] =
+    useState<any>(null);
+
+  const [loading, setLoading] =
+    useState(false);
+
+  // ✅ LOAD STUDENT
   useEffect(() => {
-    const load = async () => {
+
+    const loadStudent = async () => {
+
       setLoading(true);
+
       try {
-        const data = await getStudentById(id!);
+
+        const data =
+          await getStudentById(id!);
+
+        console.log(
+          "STUDENT =>",
+          data
+        );
+
         setStudent(data);
+
       } catch (err: any) {
-        toast.error(err.message || "Error loading student");
+
+        console.error(err);
+
+        toast.error(
+          err?.message ||
+          "Error loading student"
+        );
+
       } finally {
+
         setLoading(false);
       }
     };
 
-    load();
+    loadStudent();
+
   }, [id]);
 
-  if (loading) return <p className="p-6">Loading...</p>;
-  if (!student) return <p className="p-6">No data</p>;
+  // ✅ LOADING
+  if (loading) {
+    return (
+      <div className="p-10 text-center">
 
-  const enrollment = student.enrollments?.[0];
+        <LuLoader className="animate-spin inline-block text-3xl text-primary" />
 
-  // 📊 MOCK DATA (ready for backend later)
+      </div>
+    );
+  }
+
+  // ✅ EMPTY
+  if (!student) {
+    return (
+      <div className="p-10 text-center text-default-500">
+        No student found
+      </div>
+    );
+  }
+
+  const enrollment =
+    student.enrollments?.[0];
+
+  // ✅ MOCK CHARTS
   const performanceData = {
-    labels: ["Math", "English", "Science", "History", "ICT"],
+    labels: [
+      "Math",
+      "English",
+      "Science",
+      "History",
+      "ICT",
+    ],
+
     datasets: [
       {
         label: "Marks (%)",
+
         data: [75, 82, 68, 90, 85],
+
         borderWidth: 2,
+
         tension: 0.4,
       },
     ],
   };
 
   const attendanceData = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+    labels: [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+    ],
+
     datasets: [
       {
         label: "Attendance",
+
         data: [1, 1, 0, 1, 1],
       },
     ],
@@ -81,118 +159,355 @@ const StudentDashboard = () => {
     <div className="space-y-6">
 
       {/* HEADER */}
-      <div className="bg-white p-5 rounded-xl shadow flex justify-between items-center">
-        <div>
-          <h2 className="text-xl font-bold">
-            {student.firstName} {student.lastName}
-          </h2>
-          <p className="text-sm text-gray-500">
-            {enrollment?.class?.name} • {enrollment?.class?.grade?.name}
-          </p>
+      <div className="bg-white rounded-2xl shadow-sm border p-6">
+
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+
+          <div className="flex items-center gap-4">
+
+            {/* AVATAR */}
+            <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center">
+
+              <LuUser className="text-primary text-4xl" />
+
+            </div>
+
+            {/* INFO */}
+            <div>
+
+              <h2 className="text-2xl font-bold">
+
+                {student.firstName}{" "}
+                {student.lastName}
+
+              </h2>
+
+              <div className="flex flex-wrap items-center gap-3 mt-2 text-default-500 text-sm">
+
+                <span className="flex items-center gap-1">
+
+                  <LuGraduationCap />
+
+                  {enrollment?.class?.name ||
+                    "-"}
+
+                </span>
+
+                <span>
+                  •
+                </span>
+
+                <span>
+                  {enrollment?.class?.grade
+                    ?.name || "-"}
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* STATUS */}
+          <span className="px-4 py-2 rounded-full bg-success/10 text-success text-sm font-medium h-fit">
+
+            {student.status ||
+              "ACTIVE"}
+
+          </span>
+
         </div>
 
-        <span className="px-3 py-1 bg-green-100 text-green-600 text-sm rounded">
-          {student.status}
-        </span>
       </div>
 
-      {/* KPI CARDS */}
-      <div className="grid md:grid-cols-4 gap-4">
+      {/* KPI */}
+      <div className="grid md:grid-cols-4 gap-5">
 
-        <div className="p-4 bg-white rounded-xl shadow">
-          <p className="text-sm text-gray-500">Attendance</p>
-          <h3 className="text-2xl font-bold">92%</h3>
+        {/* ATTENDANCE */}
+        <div className="bg-white rounded-2xl shadow-sm border p-5">
+
+          <p className="text-sm text-default-500">
+            Attendance
+          </p>
+
+          <h3 className="text-3xl font-bold mt-2">
+            92%
+          </h3>
+
         </div>
 
-        <div className="p-4 bg-white rounded-xl shadow">
-          <p className="text-sm text-gray-500">Average Marks</p>
-          <h3 className="text-2xl font-bold">80%</h3>
+        {/* MARKS */}
+        <div className="bg-white rounded-2xl shadow-sm border p-5">
+
+          <p className="text-sm text-default-500">
+            Average Marks
+          </p>
+
+          <h3 className="text-3xl font-bold mt-2">
+            80%
+          </h3>
+
         </div>
 
-        <div className="p-4 bg-white rounded-xl shadow">
-          <p className="text-sm text-gray-500">Fees Status</p>
-          <h3 className="text-lg font-semibold text-green-600">Paid</h3>
+        {/* FEES */}
+        <div className="bg-white rounded-2xl shadow-sm border p-5">
+
+          <p className="text-sm text-default-500">
+            Fees Status
+          </p>
+
+          <h3 className="text-lg font-semibold text-success mt-2">
+            Paid
+          </h3>
+
         </div>
 
-        <div className="p-4 bg-white rounded-xl shadow">
-          <p className="text-sm text-gray-500">Discipline</p>
-          <h3 className="text-lg font-semibold text-blue-600">Good</h3>
+        {/* DISCIPLINE */}
+        <div className="bg-white rounded-2xl shadow-sm border p-5">
+
+          <p className="text-sm text-default-500">
+            Discipline
+          </p>
+
+          <h3 className="text-lg font-semibold text-primary mt-2">
+            Good
+          </h3>
+
         </div>
 
       </div>
 
       {/* CHARTS */}
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid lg:grid-cols-2 gap-6">
 
         {/* PERFORMANCE */}
-        <div className="bg-white p-5 rounded-xl shadow">
-          <h3 className="font-semibold mb-4">Performance</h3>
+        <div className="bg-white rounded-2xl shadow-sm border p-6">
+
+          <h3 className="font-semibold text-lg mb-5">
+            Performance
+          </h3>
+
           <Line data={performanceData} />
+
         </div>
 
         {/* ATTENDANCE */}
-        <div className="bg-white p-5 rounded-xl shadow">
-          <h3 className="font-semibold mb-4">Weekly Attendance</h3>
+        <div className="bg-white rounded-2xl shadow-sm border p-6">
+
+          <h3 className="font-semibold text-lg mb-5">
+            Weekly Attendance
+          </h3>
+
           <Bar data={attendanceData} />
+
         </div>
 
       </div>
 
-      {/* DETAILS */}
-      <div className="bg-white p-5 rounded-xl shadow">
-        <h3 className="font-semibold mb-4">Student Info</h3>
+      {/* STUDENT INFO */}
+      <div className="bg-white rounded-2xl shadow-sm border p-6">
 
-        <div className="grid md:grid-cols-3 gap-4 text-sm">
+        <h3 className="font-semibold text-lg mb-6">
+          Student Information
+        </h3>
 
-          <div>
-            <p className="text-gray-500">Gender</p>
-            <p>{student.gender}</p>
+        <div className="grid md:grid-cols-3 gap-6 text-sm">
+
+          {/* GENDER */}
+          <div className="space-y-1">
+
+            <p className="text-default-500 flex items-center gap-2">
+
+              <LuUser />
+
+              Gender
+
+            </p>
+
+            <p className="font-medium">
+              {student.gender || "-"}
+            </p>
+
           </div>
 
-          <div>
-            <p className="text-gray-500">DOB</p>
-            <p>{new Date(student.dateOfBirth).toLocaleDateString()}</p>
+          {/* DOB */}
+          <div className="space-y-1">
+
+            <p className="text-default-500 flex items-center gap-2">
+
+              <LuCalendar />
+
+              Date of Birth
+
+            </p>
+
+            <p className="font-medium">
+
+              {student.dateOfBirth
+                ? new Date(
+                    student.dateOfBirth
+                  ).toLocaleDateString()
+                : "-"}
+
+            </p>
+
           </div>
 
-          <div>
-            <p className="text-gray-500">Nationality</p>
-            <p>{student.nationality}</p>
+          {/* NATIONALITY */}
+          <div className="space-y-1">
+
+            <p className="text-default-500">
+              Nationality
+            </p>
+
+            <p className="font-medium">
+              {student.nationality ||
+                "-"}
+            </p>
+
           </div>
 
-          <div>
-            <p className="text-gray-500">Parent</p>
-            <p>{student.parentName}</p>
+          {/* EMAIL */}
+          <div className="space-y-1">
+
+            <p className="text-default-500 flex items-center gap-2">
+
+              <LuMail />
+
+              Email
+
+            </p>
+
+            <p className="font-medium">
+              {student.email || "-"}
+            </p>
+
           </div>
 
-          <div>
-            <p className="text-gray-500">Contact</p>
-            <p>{student.contact}</p>
+          {/* PARENT */}
+          <div className="space-y-1">
+
+            <p className="text-default-500 flex items-center gap-2">
+
+              <LuUsers />
+
+              Parent
+
+            </p>
+
+            <p className="font-medium">
+              {student.parentName ||
+                "-"}
+            </p>
+
           </div>
 
-          <div>
-            <p className="text-gray-500">Address</p>
-            <p>{student.address}</p>
+          {/* CONTACT */}
+          <div className="space-y-1">
+
+            <p className="text-default-500 flex items-center gap-2">
+
+              <LuPhone />
+
+              Contact
+
+            </p>
+
+            <p className="font-medium">
+              {student.contact || "-"}
+            </p>
+
+          </div>
+
+          {/* ADDRESS */}
+          <div className="space-y-1">
+
+            <p className="text-default-500 flex items-center gap-2">
+
+              <LuMapPin />
+
+              Address
+
+            </p>
+
+            <p className="font-medium">
+              {student.address || "-"}
+            </p>
+
+          </div>
+
+          {/* RELIGION */}
+          <div className="space-y-1">
+
+            <p className="text-default-500">
+              Religion
+            </p>
+
+            <p className="font-medium">
+              {student.religion ||
+                "-"}
+            </p>
+
+          </div>
+
+          {/* PREVIOUS SCHOOL */}
+          <div className="space-y-1">
+
+            <p className="text-default-500">
+              Previous School
+            </p>
+
+            <p className="font-medium">
+              {student.previousSchool ||
+                "-"}
+            </p>
+
           </div>
 
         </div>
+
       </div>
 
-      {/* FUTURE MODULES (READY) */}
-      <div className="grid md:grid-cols-3 gap-4">
+      {/* FUTURE MODULES */}
+      <div className="grid md:grid-cols-3 gap-5">
 
-        <div className="p-4 bg-white rounded-xl shadow">
-          <h4 className="font-semibold">📘 Exams</h4>
-          <p className="text-sm text-gray-500">Coming soon...</p>
+        {/* EXAMS */}
+        <div className="bg-white rounded-2xl shadow-sm border p-5">
+
+          <h4 className="font-semibold text-lg">
+            📘 Exams
+          </h4>
+
+          <p className="text-sm text-default-500 mt-2">
+            Coming soon...
+          </p>
+
         </div>
 
-        <div className="p-4 bg-white rounded-xl shadow">
-          <h4 className="font-semibold">💰 Fees</h4>
-          <p className="text-sm text-gray-500">Coming soon...</p>
+        {/* FEES */}
+        <div className="bg-white rounded-2xl shadow-sm border p-5">
+
+          <h4 className="font-semibold text-lg">
+            💰 Fees
+          </h4>
+
+          <p className="text-sm text-default-500 mt-2">
+            Coming soon...
+          </p>
+
         </div>
 
-        <div className="p-4 bg-white rounded-xl shadow">
-          <h4 className="font-semibold">📅 Timetable</h4>
-          <p className="text-sm text-gray-500">Coming soon...</p>
+        {/* TIMETABLE */}
+        <div className="bg-white rounded-2xl shadow-sm border p-5">
+
+          <h4 className="font-semibold text-lg">
+            📅 Timetable
+          </h4>
+
+          <p className="text-sm text-default-500 mt-2">
+            Coming soon...
+          </p>
+
         </div>
 
       </div>

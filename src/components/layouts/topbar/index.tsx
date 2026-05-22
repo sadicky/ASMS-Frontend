@@ -8,7 +8,7 @@ import ThemeModeToggle from './ThemeModeToggle';
 import { getUser } from "@/utils/getUser";
 import { logout } from "@/services/auth.service";
 import {
-  LuLogOut,
+  LuLogOut, 
   LuSettings,
 } from 'react-icons/lu';
 import type { ReactNode } from 'react';

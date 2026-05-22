@@ -1,59 +1,100 @@
-import { Link } from 'react-router';
+import { Link } from "react-router";
+import { useEffect, useState } from "react";
+import { getUser } from "@/utils/getUser";
+import { getSchoolById } from "@/services/school.service";
 
-const Activities = () => {
+const Welcome = () => {
+
+  const user = getUser();
+  const [school, setSchool] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadSchool = async () => {
+      try {
+        if (!user?.schoolId) {
+          console.warn("No schoolId found for user");
+          setLoading(false);
+          return;
+        }
+
+        const data = await getSchoolById(user.schoolId);
+        setSchool(data);
+
+      } catch (error) {
+        console.error("Failed to load school", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSchool();
+  }, [user]);
+
   return (
-    <div className="grid lg:grid-cols-4 grid-cols-1 mb-5 gap-5">
+    <div className="grid lg:grid-cols-4 grid-cols-1 mb-6 gap-5">
+
+      {/* LEFT SECTION */}
       <div className="lg:col-span-2">
-        <h5 className="mb-2 text-xl text-default-800 font-semibold">Welcome Paula Keenan 🎉</h5>
-        <p>
-          The salary of
-          <Link to="#" className="underline text-default-900">
-            Glennie Langosh
-          </Link>
-          is pending since 05 Dec, 2023. the documentation of the tasks, workflows, and activities
-          that make up a process managed by the HR or People Ops team.
-          <Link to="#" className="text-danger">
-            Learn More
-          </Link>
+        <h5 className="mb-2 text-xl font-semibold text-default-800">
+          Welcome {user?.email || "User"} 🎉
+        </h5>
+
+        <p className="text-default-600">
+          Role:{" "}
+          <span className="font-semibold text-default-900">
+            {user?.role || "Unknown"}
+          </span>
         </p>
+
+        <p className="mt-2 text-default-600">
+          You are managing{" "}
+          <span className="underline text-default-900 font-medium">
+            {loading ? "Loading..." : school?.name || "your school"}
+          </span>.
+        </p>
+
+        <Link to="#" className="text-danger mt-2 inline-block">
+          Learn More
+        </Link>
       </div>
 
+      {/* RIGHT STATS CARD */}
       <div className="lg:col-start-4">
-        <div className="card">
+        <div className="card shadow-sm border border-default-200">
           <div className="card-body">
-            <div className="grid grid-cols-3">
-              <div className="px-4 text-center border-e border-default-200 text-sm">
-                <h6 className="mb-1 font-bold">
-                  <span className="counter-value text-default-800" data-target="36">
-                    36
-                  </span>
+
+            <div className="grid grid-cols-3 text-center">
+
+              <div className="px-2 border-e border-default-200">
+                <h6 className="font-bold text-default-800">
+                  {school?._count?.users || 0}
                 </h6>
-                <p className="text-default-500">Absent</p>
+                <p className="text-xs text-default-500">Users</p>
               </div>
 
-              <div className="px-4 text-center border-e border-default-200 text-sm">
-                <h6 className="mb-1 font-bold">
-                  <span className="counter-value text-default-800" data-target="465">
-                    465
-                  </span>
+              <div className="px-2 border-e border-default-200">
+                <h6 className="font-bold text-default-800">
+                  {school?._count?.students || 0}
                 </h6>
-                <p className="text-default-500">Attendance</p>
+                <p className="text-xs text-default-500">Students</p>
               </div>
 
-              <div className="px-4 text-center text-sm">
-                <h6 className="mb-1 font-bold">
-                  <span className="counter-value text-default-800" data-target="50">
-                    50
-                  </span>
+              <div className="px-2">
+                <h6 className="font-bold text-default-800">
+                  {school?._count?.classes || 0}
                 </h6>
-                <p className="text-default-500">Late</p>
+                <p className="text-xs text-default-500">Classes</p>
               </div>
+
             </div>
+
           </div>
         </div>
       </div>
+
     </div>
   );
 };
 
-export default Activities;
+export default Welcome;

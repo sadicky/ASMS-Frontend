@@ -2,17 +2,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getGrades } from "@/services/grade.service";
-import { getSchools } from "@/services/school.service";
-import { createClass } from "@/services/classe.service";
-
-import toast from "react-hot-toast";
 import Select from "react-select";
+import toast from "react-hot-toast";
+
+import { createClass } from "@/services/classe.service";
+import { getGrades } from "@/services/grade.service";
+import { getStreams } from "@/services/stream.service";
 
 import {
   LuSave,
   LuLoader,
   LuRefreshCcw,
+  LuBookOpen,
 } from "react-icons/lu";
 
 const CreateClass = () => {
@@ -21,37 +22,48 @@ const CreateClass = () => {
   const [loading, setLoading] = useState(false);
 
   const [grades, setGrades] = useState<any[]>([]);
-  const [schools, setSchools] = useState<any[]>([]);
+  const [streams, setStreams] = useState<any[]>([]);
 
   const [form, setForm] = useState({
     name: "",
     gradeId: "",
-    schoolId: ""
+    streamId: "",
   });
 
-  // 🔥 LOAD GRADES + SCHOOLS
+  // ✅ LOAD DATA
   useEffect(() => {
-    const load = async () => {
+    const loadData = async () => {
       try {
-        const g = await getGrades();
-        const s = await getSchools();
+        const gradesData = await getGrades();
+        const streamsData = await getStreams();
 
-        setGrades(g.data || []);
-        setSchools(s.data || []);
-      } catch {
+        // ✅ SAFE NORMALIZATION
+        setGrades(
+          Array.isArray(gradesData)
+            ? gradesData
+            : gradesData?.data || []
+        );
+
+        setStreams(
+          Array.isArray(streamsData)
+            ? streamsData
+            : streamsData?.data || []
+        );
+
+      } catch (err) {
+        console.error(err);
         toast.error("Error loading data");
       }
     };
 
-    load();
+    loadData();
   }, []);
 
-
-  // 🔥 SUBMIT
+  // ✅ SUBMIT
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    if (!form.name || !form.gradeId || !form.schoolId) {
+    if (!form.name || !form.gradeId || !form.streamId) {
       toast.error("All fields are required");
       return;
     }
@@ -59,117 +71,161 @@ const CreateClass = () => {
     setLoading(true);
 
     try {
+      // ✅ schoolId injecté automatiquement côté backend
       await createClass(form);
 
       toast.success("Class created successfully 🚀");
-      navigate("/admin/classes");
+
+      navigate("/school/classes");
+
     } catch (err: any) {
+      console.error(err);
+
       toast.error(
-        err.response?.data?.message || "Error creating class"
+        err?.response?.data?.message ||
+        "Error creating class"
       );
     } finally {
       setLoading(false);
     }
   };
 
-  // 🔹 OPTIONS
+  // ✅ GRADE OPTIONS
   const gradeOptions = grades.map((g: any) => ({
     value: g.id,
     label: g.name,
   }));
 
-  const schoolOptions = schools.map((s: any) => ({
+  // ✅ STREAM OPTIONS
+  const streamOptions = streams.map((s: any) => ({
     value: s.id,
     label: s.name,
   }));
 
-
   return (
-    <div className="card">
+    <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
 
       {/* HEADER */}
-      <div className="card-header">
-        <h2 className="card-title">Create New Class</h2>
+      <div className="border-b px-6 py-4 flex items-center gap-3">
+        <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center">
+          <LuBookOpen className="text-blue-600 text-xl" />
+        </div>
+
+        <div>
+          <h2 className="text-xl font-bold">
+            Create New Class
+          </h2>
+
+          <p className="text-sm text-gray-500">
+            Add a new class for your school
+          </p>
+        </div>
       </div>
 
-      <div className="card-body">
-        <form onSubmit={handleSubmit}>
+      {/* BODY */}
+      <div className="p-6">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-5"
+        >
 
-          {/* 🔥 ONE LINE */}
-          <div className="flex flex-col md:flex-row gap-3 items-end">
+          {/* CLASS NAME */}
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Class Name
+            </label>
 
-            {/* CLASS NAME */}
-            <div className="w-full md:w-1/3">
-              <input
-                type="text"
-                className="form-input"
-                placeholder="Class Name"
-                value={form.name}
-                onChange={(e) =>
-                  setForm({ ...form, name: e.target.value })
-                }
-              />
-            </div>
+            <input
+              type="text"
+              placeholder="Example: 6ème A"
+              value={form.name}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  name: e.target.value,
+                })
+              }
+              className="w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* GRADE + STREAM */}
+          <div className="grid md:grid-cols-2 gap-4">
 
             {/* GRADE */}
-            <div className="w-full md:w-1/3">
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Select Grade
+              </label>
+
               <Select
                 options={gradeOptions}
-                placeholder="Grade"
+                placeholder="Choose grade..."
                 value={
-                  gradeOptions.find((o) => o.value === form.gradeId) || null
+                  gradeOptions.find(
+                    (o) => o.value === form.gradeId
+                  ) || null
                 }
                 onChange={(selected: any) =>
                   setForm({
                     ...form,
-                    gradeId: selected?.value || ""
+                    gradeId: selected?.value || "",
                   })
                 }
+                isClearable
               />
             </div>
 
-            {/* SCHOOL */}
-            <div className="w-full md:w-1/3">
+            {/* STREAM */}
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Select Stream
+              </label>
+
               <Select
-                options={schoolOptions}
-                placeholder="School"
+                options={streamOptions}
+                placeholder="Choose stream..."
                 value={
-                  schoolOptions.find((o) => o.value === form.schoolId) || null
+                  streamOptions.find(
+                    (o) => o.value === form.streamId
+                  ) || null
                 }
                 onChange={(selected: any) =>
                   setForm({
                     ...form,
-                    schoolId: selected?.value || "",
+                    streamId: selected?.value || "",
                   })
                 }
+                isClearable
               />
             </div>
 
           </div>
 
           {/* ACTIONS */}
-          <div className="flex justify-end gap-2 pt-5">
+          <div className="flex justify-end gap-3 pt-4">
 
             <button
               type="button"
-              onClick={() => navigate("/admin/classes")}
-              className="btn border"
+              onClick={() => navigate("/school/classes")}
+              className="px-5 py-3 rounded-xl border hover:bg-gray-50 transition flex items-center"
             >
-              <LuRefreshCcw className="me-1" />
+              <LuRefreshCcw className="me-2" />
               Cancel
             </button>
 
             <button
               type="submit"
               disabled={loading}
-              className="btn bg-primary text-white flex items-center"
+              className="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition flex items-center"
             >
               {loading ? (
-                <LuLoader className="animate-spin me-1" />
+                <LuLoader className="animate-spin me-2" />
               ) : (
-                <LuSave className="me-1" />
+                <LuSave className="me-2" />
               )}
-              Create
+
+              Create Class
             </button>
 
           </div>

@@ -41,17 +41,40 @@ export const createStudent = async (data: any) => {
   }
 };
 
-// 🔥 SCHOOL ADMIN (ARRAY DIRECT)
+// ✅ GET MY SCHOOL STUDENTS
 export const getMyStudents = async (params?: any) => {
   try {
-    const res = await api.get("/students/my-students", { params });
+
+    const res = await api.get(
+      "/students/all",
+      {
+        params,
+      }
+    );
+
+    console.log(
+      "MY STUDENTS =>",
+      res.data
+    );
 
     return {
-      data: res.data.data || [],
-      meta: res.data.meta || {},
+      data:
+        res.data?.data ||
+        res.data ||
+        [],
+
+      meta:
+        res.data?.meta || {},
     };
+
   } catch (error: any) {
-    throw error.response?.data || "Error fetching students";
+
+    console.error(error);
+
+    throw (
+      error.response?.data ||
+      "Error fetching students"
+    );
   }
 };
 
@@ -72,5 +95,15 @@ export const getStudentById = async (id: string): Promise<Student> => {
     return res.data;
   } catch (error: any) {
     throw error.response?.data || "Error fetching student";
+  }
+};
+
+// 🔥 GET STUDENTS BY LESSON SESSION
+export const getStudentsBySession = async (sessionId: string) => {
+  try {
+    const res = await api.get(`/students/session/${sessionId}`);
+    return res.data;
+  } catch (error: any) {
+    throw error.response?.data || "Error fetching students by session";
   }
 };

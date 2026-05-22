@@ -42,7 +42,8 @@ export const ROLES = {
   SUPER_ADMIN: "SUPER_ADMIN",
   SCHOOL_ADMIN: "SCHOOL_ADMIN",
   TEACHER: "TEACHER",
-  STUDENT: "STUDENT"
+  STUDENT: "STUDENT",
+  PARENT: "PARENT",
 } as const;
 
 export const ROLE_BASE_PATH = {
@@ -50,4 +51,5 @@ export const ROLE_BASE_PATH = {
   SCHOOL_ADMIN: "/school",
   TEACHER: "/teacher",
   STUDENT: "/student",
+  PARENT: "/parent",
 } as const;

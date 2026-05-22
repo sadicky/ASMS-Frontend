@@ -1,14 +1,12 @@
 import PageBreadcrumb from '@/components/PageBreadcrumb';
-import Activities from './components/Activities';
-import ApplicationReceived from './components/ApplicationReceived';
 import BirthdayCard from './components/BirthdayCard';
-import EmployeDetails from './components/EmployeeDetails';
 import EmployeePerformance from './components/EmployeePerformance';
 import RecentPayroll from './components/RecentPayroll';
 import TotalProjects from './components/TotalProjects';
 import UpcomingInterview from './components/UpcomingInterview';
 import UpcomingScheduled from './components/UpcomingScheduled';
 import PageMeta from '@/components/PageMeta';
+import Welcome from './components/Activities';
 
 const Index = () => {
   return (
@@ -16,11 +14,7 @@ const Index = () => {
       <PageMeta title="School Dashboard" />
       <main>
         <PageBreadcrumb title="School" subtitle="Dashboard" />
-        <Activities />
-        <div className="grid lg:grid-cols-2 grid-cols-1 gap-5 mb-5">
-          <EmployeDetails />
-          <ApplicationReceived />
-        </div>
+        <Welcome />
         <div className="grid lg:grid-cols-4 grid-cols-1 gap-5">
           <div className="lg:col-span-3 col-span-1">
             <EmployeePerformance />

@@ -146,28 +146,6 @@ const Index = () => {
                           onChange={(e) => setPassword(e.target.value)}
                         />
                       </div>
-
-                      <div className="flex gap-2 mb-4">
-                        <input id="checkbox-1" type="checkbox" className="form-checkbox" />
-                        <label
-                          className="text-default-900 text-sm font-medium"
-                          htmlFor="checkbox-1"
-                        >
-                          Remember Me
-                        </label>
-                        
-                        {/* <span className="flex justify-end text-base text-default-500">
-                          Don't have an account ?
-                          <Link
-                            to="/modern-register"
-                            className="font-semibold underline hover:text-primary transition duration-200"
-                          >
-                            {' '}
-                            SignUp
-                          </Link>
-                        </span> */}
-                      </div>
-
                       <div className="mt-5 text-center">
                         <button type="submit" 
                       disabled={loading} className="btn bg-primary text-white w-full">

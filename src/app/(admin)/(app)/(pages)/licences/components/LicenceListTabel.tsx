@@ -1,8 +1,5 @@
-import { getRegions } from "@/services/region.service";
-import { Link } from 'react-router';
 import { useNavigate } from "react-router-dom";
 import {
-  LuCircleCheck,
   LuLoader,
   LuPlus,
   LuSearch,
@@ -33,11 +30,6 @@ const LicenceListTabel = () => {
     <div className="card">
       <div className="card-header">
         <h6 className="card-title">Regions List</h6>
-        <button className="btn btn-sm bg-primary text-white"
-          onClick={() => navigate("/admin/regions/create")}>
-          <LuPlus className="size-4 me-1" />
-          Add Region
-        </button>
       </div>
 
       <div className="card-header">

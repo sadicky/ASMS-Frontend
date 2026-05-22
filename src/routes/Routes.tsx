@@ -12,7 +12,21 @@ const Licences = lazy(() => import('@/app/(admin)/(app)/(pages)/licences'));
 const Grades = lazy(() => import('@/app/(admin)/(app)/(pages)/grades'));
 const Classes = lazy(() => import('@/app/(admin)/(app)/(pages)/classes'));
 const Students = lazy(() => import('@/app/(admin)/(app)/(pages)/students'));
-const Staffs = lazy(() => import('@/app/(school)/(pages)/staff'));
+const Terms = lazy(() => import('@/app/(admin)/(app)/(pages)/terms'));
+
+//TEACHER ADD
+const AddTeacherLessons = lazy(() => import('@/app/(teacher)/(pages)/lessons/add-new'));
+const AddTeacherAssessment = lazy(() => import('@/app/(teacher)/(pages)/assessments/add-new'));
+const AddTeacherAttendances = lazy(() => import('@/app/(teacher)/(pages)/attendances/add-new'));
+const AddTeacherTimetable = lazy(() => import('@/app/(teacher)/(pages)/timetables/add-new'));
+// const AddTeacherCourses = lazy(() => import('@/app/(teacher)/(pages)/courses/add-new'));
+
+//TEACHER LISTS
+const TeacherMyLessons = lazy(() => import('@/app/(teacher)/(pages)/lessons'));
+const TeacherMyCourses = lazy(() => import('@/app/(teacher)/(pages)/courses'));
+const TeacherMyAssessments = lazy(() => import('@/app/(teacher)/(pages)/assessments'));
+const TeacherMyAttendances = lazy(() => import('@/app/(teacher)/(pages)/attendances'));
+const TeacherMyTimetables = lazy(() => import('@/app/(teacher)/(pages)/timetables'));
 
 // add page super admin
 const AddRegion = lazy(() => import('@/app/(admin)/(app)/(pages)/regions/add-new'));
@@ -28,6 +42,18 @@ const AddStaff = lazy(() => import('@/app/(school)/(pages)/staff/add-new'));
 
 //add page school admin
 const AddStudent = lazy(() => import('@/app/(school)/(pages)/students/add-new'));
+const AddMyClass = lazy(() => import('@/app/(school)/(pages)/classes/add-new'));
+const AddMyStream = lazy(() => import('@/app/(school)/(pages)/streams/add-new'));
+const AddMySubject = lazy(() => import('@/app/(school)/(pages)/subjects/add-new'));
+const AddMyCourses = lazy(() => import('@/app/(school)/(pages)/courses/add-new'));
+const AddMyAssignment = lazy(() => import('@/app/(school)/(pages)/teacher-assignment/add-new'));
+const AddMyLesson = lazy(() => import('@/app/(school)/(pages)/lessons/add-new'));
+const AddMyTimetable = lazy(() => import('@/app/(school)/(pages)/timetables/add-new'));
+const AddMyAttendance = lazy(() => import('@/app/(school)/(pages)/attendances/add-new'));
+const AddMyAssessment = lazy(() => import('@/app/(school)/(pages)/assessments/add-new'));
+const AddMyTerm = lazy(() => import('@/app/(school)/(pages)/terms/add-new'));
+const AddMyExam = lazy(() => import('@/app/(school)/(pages)/exams/add-new'));
+const AddMyGradeBook = lazy(() => import('@/app/(school)/(pages)/gradebooks/add-new'));
 
 // SUPER ADMIN LIST VIEWS
 const SchoolList = lazy(() => import('@/app/(admin)/(app)/(pages)/schools'));
@@ -36,10 +62,30 @@ const SchoolOverview = lazy(() => import('@/app/(admin)/(app)/(pages)/schools/ov
 const ClassOverview = lazy(() => import('@/app/(admin)/(app)/(pages)/classes/overview'));
 const StudentOverview = lazy(() => import('@/app/(admin)/(app)/(pages)/students/overview'));
 
+//SCHOOL ADMIN OVERVIEW
+const MyStudentOverview = lazy(() => import('@/app/(school)/(pages)/students/overview'));
+const MyStaffOverview = lazy(() => import('@/app/(school)/(pages)/staff/overview'));
+
+//TEACHER OVERVIEW
+const MyCoursesLessons = lazy(() => import('@/app/(teacher)/(pages)/courses/overview'));
+const MyRecordsMarks = lazy(() => import('@/app/(teacher)/(pages)/assessments/record-marks'));
+
+
 // SCHOOL ADMIN LIST VIEWS
 const StudentSchool = lazy(() => import('@/app/(school)/(pages)/students'));
 const MyClass = lazy(() => import('@/app/(school)/(pages)/classes'));
 const MyGrades = lazy(() => import('@/app/(school)/(pages)/grades'));
+const MySubjects = lazy(() => import('@/app/(school)/(pages)/subjects'));
+const MyCourses = lazy(() => import('@/app/(school)/(pages)/courses'));
+const MyLessons = lazy(() => import('@/app/(school)/(pages)/lessons'));
+const MyTimetable = lazy(() => import('@/app/(school)/(pages)/timetables'));
+const MyAttendances = lazy(() => import('@/app/(school)/(pages)/attendances'));
+const MyAssessments = lazy(() => import('@/app/(school)/(pages)/assessments'));
+const MyTerms = lazy(() => import('@/app/(school)/(pages)/terms'));
+const MyExams = lazy(() => import('@/app/(school)/(pages)/exams'));
+const MyGradeBooks = lazy(() => import('@/app/(school)/(pages)/gradebooks'));
+const Staffs = lazy(() => import('@/app/(school)/(pages)/staff'));
+const Streams = lazy(() => import('@/app/(school)/(pages)/streams'));
 
 // USers
 
@@ -68,13 +114,6 @@ const SideNavHoverActive = lazy(() => import('@/app/(admin)/(layouts)/sidenav-ho
 const SideOffcanvas = lazy(() => import('@/app/(admin)/(layouts)/sidenav-offcanvas'));
 const SideNavSmall = lazy(() => import('@/app/(admin)/(layouts)/sidenav-small'));
 
-//Pages
-
-const Faq = lazy(() => import('@/app/(admin)/(pages)/faqs'));
-const Pricing = lazy(() => import('@/app/(admin)/(pages)/pricing'));
-const Starter = lazy(() => import('@/app/(admin)/(pages)/starter'));
-const Timeline = lazy(() => import('@/app/(admin)/(pages)/timeline'));
-
 //auth
 const CreatePassword = lazy(() => import('@/app/(auth)/modern-create-password'));
 const Login = lazy(() => import('@/app/(auth)/login'));
@@ -84,10 +123,6 @@ const Logout = lazy(() => import('@/app/(auth)/modern-logout'));
 const TwoStep = lazy(() => import('@/app/(auth)/modern-two-steps'));
 const VerifyEmail = lazy(() => import('@/app/(auth)/modern-verify-email'));
 
-//  landing
-
-const OnePageLanding = lazy(() => import('@/app/(landing)/onepage-landing'));
-const ProductLanding = lazy(() => import('@/app/(landing)/product-landing'));
 
 //Other
 
@@ -118,12 +153,33 @@ export const layoutsRoutes = [
   { path: '/admin/grades', name: 'Grades', element: <Grades /> ,roles: [ROLES.SUPER_ADMIN,ROLES.SCHOOL_ADMIN]},
    { path: '/admin/classes', name: 'Classes', element: <Classes /> ,roles: [ROLES.SUPER_ADMIN,ROLES.SCHOOL_ADMIN]},
    { path: '/admin/students', name: 'Students', element: <Students /> ,roles: [ROLES.SUPER_ADMIN]},
+   { path: '/admin/terms', name: 'Terms', element: <Terms /> ,roles: [ROLES.SUPER_ADMIN]},
 
    // SCHOOL PAGES
    { path: '/school/students', name: 'Students', element: <StudentSchool /> ,roles: [ROLES.SCHOOL_ADMIN]},
    { path: '/school/staffs', name: 'Staff', element: <Staffs /> ,roles: [ROLES.SCHOOL_ADMIN]},
    { path: '/school/grades', name: 'Grades', element: <MyGrades /> ,roles: [ROLES.SCHOOL_ADMIN]},
    { path: '/school/classes', name: 'Classes', element: <MyClass /> ,roles: [ROLES.SCHOOL_ADMIN]},
+   { path: '/school/streams', name: 'Streams', element: <Streams /> ,roles: [ROLES.SCHOOL_ADMIN]},
+   { path: '/school/subjects', name: 'Subjects', element: <MySubjects /> ,roles: [ROLES.SCHOOL_ADMIN]},
+   { path: '/school/courses', name: 'Courses', element: <MyCourses /> ,roles: [ROLES.SCHOOL_ADMIN]},
+   { path: '/school/lessons', name: 'Lessons', element: <MyLessons /> ,roles: [ROLES.SCHOOL_ADMIN]},
+   { path: '/school/timetables', name: 'Timetable', element: <MyTimetable /> ,roles: [ROLES.SCHOOL_ADMIN]},
+   { path: '/school/attendances', name: 'Attendances', element: <MyAttendances /> ,roles: [ROLES.SCHOOL_ADMIN]},
+   { path: '/school/assessments', name: 'Assessments', element: <MyAssessments /> ,roles: [ROLES.SCHOOL_ADMIN]},
+   { path: '/school/terms', name: 'Terms', element: <MyTerms /> ,roles: [ROLES.SCHOOL_ADMIN]},
+  { path: '/school/exams', name: 'Exams', element: <MyExams /> ,roles: [ROLES.SCHOOL_ADMIN]},
+  { path: '/school/gradebooks', name: 'GradeBooks', element: <MyGradeBooks /> ,roles: [ROLES.SCHOOL_ADMIN, ROLES.TEACHER, ROLES.PARENT]},
+ 
+  //TEACHER PAGES
+ { path: '/teacher/lessons', name: 'Lessons', element: <TeacherMyLessons /> ,roles: [ROLES.TEACHER]},
+ { path: '/teacher/courses', name: 'Courses', element: <TeacherMyCourses /> ,roles: [ROLES.TEACHER]},
+ { path: '/teacher/assessments', name: 'Assessments', element: <TeacherMyAssessments /> ,roles: [ROLES.TEACHER]},
+ { path: '/teacher/attendances', name: 'Attendances', element: <TeacherMyAttendances /> ,roles: [ROLES.TEACHER]},
+ { path: '/teacher/timetables', name: 'Timetables', element: <TeacherMyTimetables /> ,roles: [ROLES.TEACHER]},
+
+
+ //TEACHER ADD
 
   // ADD PAGES
   { path: '/admin/regions/create', name: 'AddRegion', element: <AddRegion /> ,roles: [ROLES.SUPER_ADMIN]},
@@ -134,18 +190,49 @@ export const layoutsRoutes = [
   { path: '/admin/years/create', name: 'AddYear', element: <AddYear /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/licences/create', name: 'AddLicence', element: <AddLicence /> ,roles: [ROLES.SUPER_ADMIN]},
   { path: '/admin/grades/create', name: 'AddGrade', element: <AddGrade /> ,roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN] },
-{ path: '/admin/classes/create', name: 'AddClass', element: <AddClass /> ,roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN] },
+  { path: '/admin/classes/create', name: 'AddClass', element: <AddClass /> ,roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN] },
+
 { path: '/school/students/create', name: 'AddStudent', element: <AddStudent /> ,roles: [ROLES.SCHOOL_ADMIN] },
 { path: '/school/staff/create', name: 'AddStaff', element: <AddStaff /> ,roles: [ROLES.SCHOOL_ADMIN] },
+{ path: '/school/streams/create', name: 'AddStream', element: <AddMyStream /> ,roles: [ROLES.SCHOOL_ADMIN] },
+{ path: '/school/classes/create', name: 'AddClass', element: <AddMyClass /> ,roles: [ROLES.SCHOOL_ADMIN] },
+{ path: '/school/subjects/create', name: 'AddSubject', element: <AddMySubject /> ,roles: [ROLES.SCHOOL_ADMIN] },
+{ path: '/school/courses/create', name: 'AddCourse', element: <AddMyCourses /> ,roles: [ROLES.SCHOOL_ADMIN] },
+{ path: '/school/teacher-assignments/create', name: 'Add Staff', element: <AddMyAssignment /> ,roles: [ROLES.SCHOOL_ADMIN]},
+{ path: '/school/timetables/create', name: 'Add Timetable', element: <AddMyTimetable /> ,roles: [ROLES.SCHOOL_ADMIN]},
+{ path: '/school/lessons/create', name: 'Add Lesson', element: <AddMyLesson /> ,roles: [ROLES.TEACHER]},
+{ path: '/school/attendances/create', name: 'Add Attendance', element: <AddMyAttendance /> ,roles: [ROLES.SCHOOL_ADMIN]},
+{ path: '/school/assessments/create', name: 'Add Assessment', element: <AddMyAssessment /> ,roles: [ROLES.SCHOOL_ADMIN]},
+{ path: '/school/terms/create', name: 'Add Term', element: <AddMyTerm /> ,roles: [ROLES.SCHOOL_ADMIN]},
+{ path: '/school/exams/create', name: 'Add Exam', element: <AddMyExam /> ,roles: [ROLES.SCHOOL_ADMIN]},
+{ path: '/school/gradebooks/create', name: 'Add GradeBook', element: <AddMyGradeBook /> ,roles: [ROLES.SCHOOL_ADMIN]},
+ { path: '/school/streams/create', name: 'AddStream', element: <AddMyStream /> ,roles: [ROLES.SCHOOL_ADMIN] },
 
+//TEACHER
+{ path: '/teacher/lessons/course/:courseId/create', name: 'Add Session', element: <AddTeacherLessons /> ,roles: [ROLES.TEACHER]},
+{ path: '/teacher/assessments/create', name: 'Add Assessment', element: <AddTeacherAssessment /> ,roles: [ROLES.TEACHER]},
+{ path: '/teacher/attendances/create', name: 'Add Attendance', element: <AddTeacherAttendances /> ,roles: [ROLES.TEACHER]},
+{ path: '/teacher/timetables/create', name: 'Add Timetable', element: <AddTeacherTimetable /> ,roles: [ROLES.TEACHER]},
 
+// SUPER ADMIN VIEWS
   { path: '/admin/licences/list', name: 'LicencesList', element: <LicencesList /> ,roles: [ROLES.SUPER_ADMIN] },
   { path: '/admin/school/list', name: 'SchoolList', element: <SchoolList />,roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN] },
   { path: '/admin/school/:id', name: 'SchoolOverview', element: <SchoolOverview /> ,roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN]},
   { path: '/admin/classes/:id', name: 'ClassOverview', element: <ClassOverview /> ,roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN]},
   { path: '/admin/students/:id', name: 'StudentOverview', element: <StudentOverview /> ,roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN]},
+ 
+    //SCHOOL OVERVIEW
+  { path: '/school/students/:id', name: 'StudentOverview', element: <MyStudentOverview /> ,roles: [ROLES.SUPER_ADMIN, ROLES.SCHOOL_ADMIN]},
+ { path: '/school/staffs/:id', name: 'StaffOverview', element: <MyStaffOverview /> ,roles: [ROLES.SCHOOL_ADMIN]},
 
-  // <Route path="/admin/schools/:id" element={<ViewSchool />} />
+ //TEACHER OVERVIEW
+  { path: '/teacher/lessons/course/:courseId', name: 'My Lessons', element: <MyCoursesLessons /> ,roles: [ROLES.TEACHER]},
+ { path: '/teacher/assessments/:id', name: 'My Assessments', element: <MyStaffOverview /> ,roles: [ROLES.TEACHER]},
+ { path: '/teacher/assessments/:id/marks', name: 'My Marks', element: <MyRecordsMarks /> ,roles: [ROLES.TEACHER]},
+ { path: '/teacher/marks/course/:id', name: 'My Marks', element: <MyStaffOverview /> ,roles: [ROLES.TEACHER]},
+
+
+  //  /school/teacher-assignments/create?courseId=${course.id}
   { path: '/users-grid', name: 'UserGrid', element: <UserGrid /> },
   { path: '/users-list', name: 'UserList', element: <UserList /> },
 
@@ -169,10 +256,6 @@ export const layoutsRoutes = [
   { path: '/sidenav-small', name: 'SideNavSmall', element: <SideNavSmall /> },
   { path: '/sidenav-hover-active', name: 'SideNavHoverActive', element: <SideNavHoverActive /> },
 
-  { path: '/faqs', name: 'Faqs', element: <Faq /> },
-  { path: '/pricing', name: 'Pricing', element: <Pricing /> },
-  { path: '/starter', name: 'Starter', element: <Starter /> },
-  { path: '/timeline', name: 'Timeline', element: <Timeline /> },
 ];
 
 export const singlePageRoutes = [
@@ -190,8 +273,6 @@ export const singlePageRoutes = [
   { path: '/modern-verify-email', name: 'ModernVerifyEmail', element: <VerifyEmail /> },
   { path: '/modern-two-steps', name: 'ModernTwoStep', element: <TwoStep /> },
 
-  { path: '/onepage-landing', name: 'OnePageLanding', element: <OnePageLanding /> },
-  { path: '/product-landing', name: 'ProductLanding', element: <ProductLanding /> },
 
   { path: '/404', name: '404', element: <Error404 /> },
   { path: '/coming-soon', name: 'ComingSoon', element: <CommingSoon /> },

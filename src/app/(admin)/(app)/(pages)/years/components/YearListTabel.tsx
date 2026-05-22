@@ -1,216 +1,330 @@
-import { getYears } from "@/services/year.service";
-import { Link, useNavigate } from 'react-router';
-import {
-    LuChevronLeft,
-    LuChevronRight,
-    LuCircleCheck,
-    LuEllipsis,
-    LuEye,
-    LuLoader,
-    LuPlus,
-    LuSearch,
-    LuSlidersHorizontal,
-    LuSquarePen,
-    LuTrash2,
-} from 'react-icons/lu';
 import { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
+import {
+  getAcademicYears,
+  activateAcademicYear,
+} from "@/services/year.service";
+import { Link } from "react-router";
+import { LuPlus } from "react-icons/lu";
 
-type Year = {
-    id: string;
-    name: string;
-};
+const ListAcademics = () => {
 
-const YearListTabel = () => {
-    const navigate = useNavigate();
-    const [years, setYears] = useState<Year[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-    const [search, setSearch] = useState("");
-    const [page, setPage] = useState(1);
-    const limit = 10; // nombre d'années par page
+  const [academicYears, setAcademicYears] =
+    useState<any[]>([]);
 
+  const [loading, setLoading] =
+    useState<boolean>(true);
 
-    useEffect(() => {
-        const fetchYears = async () => {
-            setLoading(true);
-            try {
-                const res = await getYears();
-                setYears(res.data || []);
-            } catch (err: any) {
-                console.error(err);
-                toast.error("Error loading school years");
-                setError(err.response?.data?.message || "Failed to load years");
-            } finally {
-                setLoading(false);
-            }
-        };
+  const [search, setSearch] =
+    useState<string>("");
 
-        fetchYears();
-    }, []);
+  const [page, setPage] =
+    useState<number>(1);
 
+  const [meta, setMeta] =
+    useState<any>(null);
 
-    // Filter & paginate
-    const filteredYears = years.filter((year) =>
-        year.name.toLowerCase().includes(search.toLowerCase())
-    );
+  const limit = 10;
 
-    const lastPage = Math.ceil(filteredYears.length / limit);
-    const paginatedYears = filteredYears.slice((page - 1) * limit, page * limit);
+  /* =================================
+     FETCH DATA
+  ================================= */
 
-    return (
-        <div className="card">
-            <div className="card-header">
-                <h6 className="card-title">List</h6>
-                <button onClick={() => navigate("/admin/years/create")} className="btn btn-sm bg-primary text-white">
-                    <LuPlus className="size-4 me-1" />
-                    Add School Year
-                </button>
-            </div>
+  const fetchAcademicYears = async () => {
+    try {
+      setLoading(true);
 
-            <div className="card-header">
-                <div className="md:flex items-center md:space-y-0 space-y-4 gap-3">
-                    <div className="relative">
-                        <input
-                            type="text"
-                            value={search}
-                            onChange={(e) => {
-                                setPage(1);
-                                setSearch(e.target.value);
-                            }}
-                            className="form-input form-input-sm ps-9"
-                            placeholder="Search for School Year"
-                        />
-                        <div className="absolute inset-y-0 start-0 flex items-center ps-3">
-                            <LuSearch className="size-3.5 flex items-center text-default-500 fill-default-100" />
-                        </div>
-                    </div>
-                </div>
+      const res = await getAcademicYears({
+        page,
+        limit,
+        search,
+      });
 
-                <div className="flex gap-2 items-center flex-wrap">
+      setAcademicYears(res.data || []);
+      setMeta(res.meta);
+ 
+    } catch (error) {
+      console.error(
+        "Failed to load academic years",
+        error
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                    <button
-                        type="button"
-                        className="btn btn-sm size-7.5 bg-default-100 text-default-500 hover:bg-default-1500  hover:text-white"
-                    >
-                        <LuSlidersHorizontal className="size-4" />
-                    </button>
-                </div>
-            </div>
+  useEffect(() => {
+    fetchAcademicYears();
+  }, [page, search]);
 
-            <div className="flex flex-col">
+  /* =================================
+     ACTIVATE YEAR
+  ================================= */
 
-                {loading && <span className="p-4 text-danger font-medium text-center"><LuLoader className="animate-spin" /> Loading...</span>}
+  const handleActivate = async (
+    id: string
+  ) => {
+    try {
+      await activateAcademicYear(id);
 
-                {error && <p className="text-red-500">{error}</p>}
+      fetchAcademicYears();
 
-                <div className="overflow-x-auto">
-                    <div className="min-w-full inline-block align-middle">
-                        <div className="overflow-hidden">
-                            <table className="min-w-full divide-y divide-default-200">
-                                <thead className="bg-default-150">
-                                    <tr className="text-sm font-normal text-default-700 whitespace-nowrap">
-                                        <th className="px-3.5 py-3 text-start">School Year</th>
-                                        <th className="px-3.5 py-3 text-start">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {years.map((year) => (
-                                        <tr
-                                            key={year.id}
-                                            className="text-default-800 font-normal text-sm whitespace-nowrap"
-                                        >
-                                            <td className="py-3 px-3.5  text-primary">{year.name}</td>
-                                            <td className="px-3.5 py-3">
-                                                <div className="hs-dropdown relative inline-flex">
-                                                    <button
-                                                        type="button"
-                                                        className="hs-dropdown-toggle btn size-7.5 bg-default-200 hover:bg-default-600 text-default-500"
-                                                    >
-                                                        <LuEllipsis className="size-4" />
-                                                    </button>
-                                                    <div className="hs-dropdown-menu" role="menu">
-                                                        <Link
-                                                            to="#"
-                                                            className="flex items-center gap-1.5 py-1.5 px-3 text-default-500 hover:bg-default-150 rounded"
-                                                        >
-                                                            <LuEye className="size-3" /> Overview
-                                                        </Link>
-                                                        <Link
-                                                            to="#"
-                                                            className="flex items-center gap-1.5 py-1.5 px-3 text-default-500 hover:bg-default-150 rounded"
-                                                        >
-                                                            <LuSquarePen className="size-3" /> Edit
-                                                        </Link>
-                                                        <Link
-                                                            to="#"
-                                                            className="flex items-center gap-1.5 py-1.5 px-3 text-default-500 hover:bg-default-150 rounded"
-                                                        >
-                                                            <LuTrash2 className="size-3" /> Delete
-                                                        </Link>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+    } catch (error) {
+      console.error(
+        "Failed to activate year",
+        error
+      );
+    }
+  };
 
+  return (
+    <div className="card">
 
-                        </div>
-                    </div>
-                    {/* EMPTY */}
-                    {!loading && paginatedYears.length === 0 && (
-                        <p className="p-4 text-center">No DATA</p>
-                    )}
-                </div>
+      {/* HEADER */}
 
-                <div className="card-footer">
-                    {/* INFO */}
-                    <p className="text-default-500 text-sm">
-                        Showing{" "}
-                        <b>{filteredYears.length === 0 ? 0 : (page - 1) * limit + 1}</b> to{" "}
-                        <b>{Math.min(page * limit, filteredYears.length)}</b> of{" "}
-                        <b>{filteredYears.length}</b> Results
-                    </p>
-                    {/* PAGINATION */}
-                    <nav className="flex items-center gap-2" aria-label="Pagination">
-                        {/* PREV */}
-                        <button
-                            disabled={page === 1}
-                            onClick={() => setPage(page - 1)}
-                            type="button"
-                            className="btn btn-sm border bg-transparent border-default-200 text-default-600 hover:bg-primary/10 hover:text-primary hover:border-primary/10"
-                        >
-                            <LuChevronLeft className="size-4 me-1" /> Prev
-                        </button>
+      <div className="card-header flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 
-                        {/* PAGES */}
-                        {Array.from({ length: lastPage }, (_, i) => i + 1).map((p) => (
-                            <button
-                                key={p}
-                                onClick={() => setPage(p)}
-                                className={`btn size-7.5 ${page === p ? "bg-primary text-white" : "border"}`}
-                            >
-                                {p}
-                            </button>
-                        ))}
+        <div>
+          <h4 className="card-title">
+            Academic Years
+          </h4>
 
-                        {/* NEXT */}
-                        <button
-                            disabled={page === lastPage || lastPage === 0}
-                            onClick={() => setPage(page + 1)}
-                            type="button"
-                            className="btn btn-sm border bg-transparent border-default-200 text-default-600 hover:bg-primary/10 hover:text-primary hover:border-primary/10"
-                        >
-                            Next <LuChevronRight className="size-4 ms-1" />
-                        </button>
-                    </nav>
-                </div>
-
-            </div>
+          <p className="text-sm text-default-500 mt-1">
+            Manage academic years and terms
+          </p>
         </div>
-    );
+
+        <div className="flex gap-2">
+
+          {/* SEARCH */}
+
+          <input
+            type="text"
+            placeholder="Search..."
+            className="form-input w-32"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+          />
+
+          {/* ADD BUTTON */}
+
+          <Link
+            to="/admin/years/create"
+            className="btn bg-primary text-white"
+          >
+          <LuPlus className="size-4 me-1" />Add
+          </Link>
+          
+                
+        </div>
+
+      </div>
+
+      {/* BODY */}
+
+      <div className="card-body">
+
+        {loading ? (
+
+          <div className="py-10 text-center">
+            Loading...
+          </div>
+
+        ) : academicYears.length === 0 ? (
+
+          <div className="py-10 text-center text-default-500">
+            No academic years found
+          </div>
+
+        ) : (
+
+          <div className="overflow-x-auto">
+
+            <table className="table-auto w-full">
+
+              <thead>
+
+                <tr className="border-b border-default-200">
+
+                  <th className="text-left py-3 px-4">
+                    Academic Year
+                  </th>
+
+                  <th className="text-left py-3 px-4">
+                    Terms
+                  </th>
+
+                  <th className="text-left py-3 px-4">
+                    Status
+                  </th>
+
+                  <th className="text-left py-3 px-4">
+                    Actions
+                  </th>
+
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                {academicYears.map((year) => (
+
+                  <tr
+                    key={year.id}
+                    className="border-b border-default-100 hover:bg-default-50 transition"
+                  >
+
+                    {/* NAME */}
+
+                    <td className="py-4 px-4">
+
+                      <div className="font-medium text-default-900">
+                        {year.name}
+                      </div>
+
+                    </td>
+
+                    {/* TERMS */}
+
+                    <td className="py-4 px-4">
+
+                      <div className="flex flex-wrap gap-2">
+
+                        {year.terms?.map(
+                          (term: any) => (
+
+                            <span
+                              key={term.id}
+                              className="px-2 py-1 rounded bg-primary/10 text-primary text-xs"
+                            >
+                              {term.name}
+                            </span>
+
+                          )
+                        )}
+
+                      </div>
+
+                    </td>
+
+                    {/* STATUS */}
+
+                    <td className="py-4 px-4">
+
+                      {year.active ? (
+
+                        <span className="px-2 py-1 rounded bg-success/10 text-success text-xs font-medium">
+                          Active
+                        </span>
+
+                      ) : (
+
+                        <span className="px-2 py-1 rounded bg-warning/10 text-warning text-xs font-medium">
+                          Inactive
+                        </span>
+
+                      )}
+
+                    </td>
+
+                    {/* ACTIONS */}
+
+                    <td className="py-4 px-4">
+
+                      <div className="flex gap-2">
+
+                        {!year.active && (
+
+                          <button
+                            onClick={() =>
+                              handleActivate(year.id)
+                            }
+                            className="btn btn-sm bg-primary text-white"
+                          >
+                            Activate
+                          </button>
+
+                        )}
+
+                        <Link
+                          to={`/admin/academic-years/${year.id}`}
+                          className="btn btn-sm border border-default-200"
+                        >
+                          View
+                        </Link>
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                ))}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        )}
+
+      </div>
+
+      {/* PAGINATION */}
+
+      {meta && (
+        <div className="card-footer flex items-center justify-between border-t border-default-200">
+
+          <div className="text-sm text-default-500">
+
+            Showing page{" "}
+            <span className="font-medium">
+              {meta.page}
+            </span>{" "}
+            of{" "}
+            <span className="font-medium">
+              {meta.totalPages}
+            </span>
+
+          </div>
+
+          <div className="flex gap-2">
+
+            {/* PREVIOUS */}
+
+            <button
+              disabled={!meta.hasPrevPage}
+              onClick={() =>
+                setPage((prev) => prev - 1)
+              }
+              className="btn border border-default-200 disabled:opacity-50"
+            >
+              Previous
+            </button>
+
+            {/* NEXT */}
+
+            <button
+              disabled={!meta.hasNextPage}
+              onClick={() =>
+                setPage((prev) => prev + 1)
+              }
+              className="btn border border-default-200 disabled:opacity-50"
+            >
+              Next
+            </button>
+
+          </div>
+
+        </div>
+      )}
+
+    </div>
+  );
 };
 
-export default YearListTabel;
+export default ListAcademics;

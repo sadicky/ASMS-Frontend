@@ -1,11 +1,60 @@
 import api from "@/lib/api";
 
-export const getYears = async () => {
-  const response = await api.get("/academic-years");
-  return response;
-}; 
+/* ================================
+   TYPES
+================================ */
 
-export const createYear = async (name: string) => {
-  const response = await api.post("/academic-years", { name });
-  return response.data;
+export interface TermInput {
+  name: string;
+}
+
+export interface CreateAcademicYearDto {
+  name: string;
+  terms: TermInput[];
+}
+
+/* ================================
+   CREATE ACADEMIC YEAR
+================================ */
+
+export const createAcademicYear = async (
+  data: CreateAcademicYearDto
+) => {
+  const res = await api.post(
+    "/academic-years/create",
+    data
+  );
+
+  return res.data;
+};
+
+/* ================================
+   GET ALL ACADEMIC YEARS
+================================ */
+
+export const getAcademicYears = async (
+  params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }
+) => {
+  const res = await api.get(
+    "/academic-years/all",
+    {
+      params,
+    }
+  );
+
+  return res.data;
+};
+
+export const activateAcademicYear = async (
+  id: string
+) => {
+  const res = await api.patch(
+    `/academic-years/${id}/activate`
+  );
+
+  return res.data;
 };
